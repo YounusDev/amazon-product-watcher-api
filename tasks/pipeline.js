@@ -33,13 +33,13 @@
 //
 var cssFilesToInject = [
 
-  // Bring in `.css` files for themes and style guides (e.g. Bootstrap, Foundation)
-  'dependencies/**/*.css',
+    // Bring in `.css` files for themes and style guides (e.g. Bootstrap, Foundation)
+    'dependencies/**/*.css',
 
-  // All of the rest of your custom `.css` files will be injected here,
-  // in no particular order.  To customize the ordering, add additional
-  // items here, _above_ this one.
-  'styles/**/*.css'
+    // All of the rest of your custom `.css` files will be injected here,
+    // in no particular order.  To customize the ordering, add additional
+    // items here, _above_ this one.
+    'styles/**/*.css'
 ];
 
 
@@ -61,18 +61,18 @@ var cssFilesToInject = [
 //
 var jsFilesToInject = [
 
-  // Load `sails.io` before everything else.
-  'dependencies/sails.io.js',
+    // Load `sails.io` before everything else.
+    'dependencies/sails.io.js',
 
-  // Bring in `.js` files for any other client-side JavaScript dependencies.
-  // (e.g. Lodash, Vue.js, jQuery, Bootstrap, Ember, Angular, etc.)
-  // > Be sure to list dependencies that depend on each other in the right order!
-  'dependencies/**/*.js',
+    // Bring in `.js` files for any other client-side JavaScript dependencies.
+    // (e.g. Lodash, Vue.js, jQuery, Bootstrap, Ember, Angular, etc.)
+    // > Be sure to list dependencies that depend on each other in the right order!
+    'dependencies/**/*.js',
 
-  // All of the rest of your custom client-side js files will be injected here,
-  // in no particular order.  To customize the ordering, add additional items
-  // here, _above_ this one.
-  'js/**/*.js'
+    // All of the rest of your custom client-side js files will be injected here,
+    // in no particular order.  To customize the ordering, add additional items
+    // here, _above_ this one.
+    'js/**/*.js'
 ];
 
 
@@ -102,9 +102,8 @@ var jsFilesToInject = [
 // >   https://sailsjs.com/docs/concepts/assets/task-automation
 //
 var templateFilesToInject = [
-  'templates/**/*.html'
+    'templates/**/*.html'
 ];
-
 
 
 //  ███╗   ███╗██╗███████╗ ██████╗       ███████╗███████╗████████╗██╗   ██╗██████╗
@@ -124,24 +123,24 @@ var tmpPath = '.tmp/public/';
 // Prefix relative paths to source files so they point to the proper locations
 // (i.e. where the other Grunt tasks spit them out, or in some cases, where
 // they reside in the first place)
-module.exports.cssFilesToInject = cssFilesToInject.map((cssPath)=>{
-  // If we're ignoring the file, make sure the ! is at the beginning of the path
-  if (cssPath[0] === '!') {
-    return require('path').join('!' + tmpPath, cssPath.substr(1));
-  }
-  return require('path').join(tmpPath, cssPath);
+module.exports.cssFilesToInject = cssFilesToInject.map((cssPath) => {
+    // If we're ignoring the file, make sure the ! is at the beginning of the path
+    if (cssPath[0] === '!') {
+        return require('path').join('!' + tmpPath, cssPath.substr(1));
+    }
+    return require('path').join(tmpPath, cssPath);
 });
-module.exports.jsFilesToInject = jsFilesToInject.map((jsPath)=>{
-  // If we're ignoring the file, make sure the ! is at the beginning of the path
-  if (jsPath[0] === '!') {
-    return require('path').join('!' + tmpPath, jsPath.substr(1));
-  }
-  return require('path').join(tmpPath, jsPath);
+module.exports.jsFilesToInject = jsFilesToInject.map((jsPath) => {
+    // If we're ignoring the file, make sure the ! is at the beginning of the path
+    if (jsPath[0] === '!') {
+        return require('path').join('!' + tmpPath, jsPath.substr(1));
+    }
+    return require('path').join(tmpPath, jsPath);
 });
-module.exports.templateFilesToInject = templateFilesToInject.map((tplPath)=>{
-  // If we're ignoring the file, make sure the ! is at the beginning of the path
-  if (tplPath[0] === '!') {
-    return require('path').join('!assets/', tplPath.substr(1));
-  }
-  return require('path').join('assets/', tplPath);
+module.exports.templateFilesToInject = templateFilesToInject.map((tplPath) => {
+    // If we're ignoring the file, make sure the ! is at the beginning of the path
+    if (tplPath[0] === '!') {
+        return require('path').join('!assets/', tplPath.substr(1));
+    }
+    return require('path').join('assets/', tplPath);
 });
