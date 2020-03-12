@@ -10,8 +10,6 @@
 
 module.exports.routes = {
 
-    'GET /': function (req, res) {
-        res.json({'message': 'Thanks for calling me!!'});
-    }
+    'GET /': 'defaults/thanks'
 
 };
