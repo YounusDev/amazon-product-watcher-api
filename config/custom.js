@@ -20,5 +20,6 @@ module.exports.custom = {
     // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',
     // …
 
-    appSecret: '5a632519-4d50-496f-9e7d-cef656716099'
+    appSecret: '5a632519-4d50-496f-9e7d-cef656716099',
+    jwtTime: 15*60 // 5 min
 };

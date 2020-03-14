@@ -130,9 +130,9 @@
         "no-sequences": [
             "error"
         ],
-        "no-trailing-spaces": [
-            "warn"
-        ],
+//        "no-trailing-spaces": [
+//            "warn"
+//        ],
         "no-undef": [
             "off"
         ],
