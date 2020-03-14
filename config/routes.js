@@ -10,6 +10,8 @@
 
 module.exports.routes = {
 
-    'GET /': 'defaults/thanks'
-
+    'GET /': 'defaults/thanks',
+    'POST /login': 'auth/login',
+    'POST /register': 'auth/register',
+    'POST /update-profile': 'profile/update-profile',
 };
