@@ -54,7 +54,10 @@ module.exports = async function (req, res) {
     }).fetch();
 
     return res.json({
-        domainMeta: domainInfo,
-        userDomain: userDomain,
+        domain : {
+            domainId: domainInfo.id,
+            domainUrl: domainInfo.url,
+            projectName: userDomain.projectName,
+        }
     }).status(200);
 };
