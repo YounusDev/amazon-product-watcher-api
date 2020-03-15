@@ -14,4 +14,9 @@ module.exports.routes = {
     'POST /login': 'auth/login',
     'POST /register': 'auth/register',
     'POST /update-profile': 'profile/update-profile',
+
+    'POST /domain/create': 'domain/store',
+    'POST /domain/index': 'domain/index',
+
+
 };
