@@ -21,5 +21,7 @@ module.exports.custom = {
     // …
 
     appSecret: '5a632519-4d50-496f-9e7d-cef656716099',
-    jwtTime: 15*60 // 5 min
+    jwtTime: 2*60, // 5 min
+    //jwtRefreshTime: 72*60*60*1000 // 3 day
+    jwtRefreshTime: 30*1000 // 3 day
 };

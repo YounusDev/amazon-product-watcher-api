@@ -1,6 +1,9 @@
 module.exports = async function (req, res) {
 
     //check already logged in
+    // if(!!JWTHelpers.hasToken(req)) {
+    //     return res.forbidden();
+    // }
 
     let errors = {};
 
@@ -36,6 +39,7 @@ module.exports = async function (req, res) {
 
     let appSecret = sails.config.custom.appSecret;
     let jwtTime = sails.config.custom.jwtTime;
+    let jwtRefreshTime = sails.config.custom.jwtRefreshTime;
     let userWithoutMeta = _.cloneDeep(userRecord); // get userWithUserMeta data copy
 
     delete userWithoutMeta.meta; //remove meta from userWithUserMeta
@@ -45,12 +49,13 @@ module.exports = async function (req, res) {
     }, appSecret, {expiresIn: jwtTime});
 
     let refreshToken = await sails.JWT.sign({
-        data: bearerToken
-    }, appSecret, {expiresIn: jwtTime});
+        data: {bearerToken: bearerToken, user: userWithoutMeta}
+    }, appSecret, {expiresIn: jwtRefreshTime / 1000});
+
+    res.cookie('refreshToken', refreshToken, { maxAge: jwtRefreshTime, httpOnly: true, signed:true });
 
     return res.json({
         user: userRecord, // send userWithUserMeta
         bearerToken: bearerToken,
-        refreshToken: refreshToken
     }).status(200);
 };
