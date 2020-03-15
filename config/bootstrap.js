@@ -11,7 +11,6 @@
 
 module.exports.bootstrap = async function () {
 
-
     sails.JWT = require('jsonwebtoken');
 
     // By convention, this is a good place to set up fake data during development.
@@ -22,9 +21,16 @@ module.exports.bootstrap = async function () {
         return;
     }
 
-    await User.createEach([
+    let createdUsers = await User.createEach([
         {email: 'john@example.com', password: await sails.helpers.passwords.hashPassword('123')},
         {email: 'doe@example.com', password: await sails.helpers.passwords.hashPassword('123')}
-    ]);
+    ]).fetch();
 
+    await createdUsers.map(async (createdUser, index) => {
+        await UserMeta.create({
+            userId: createdUser.id,
+            firstName: 'Abdullah '+index,
+            lastName: 'mamun '+index,
+        });
+    });
 };

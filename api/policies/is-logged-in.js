@@ -1,5 +1,5 @@
 module.exports = async function (req, res, proceed) {
-    if (! await JWTHelpers.checkToken(req)) {
+    if (! req.signedCookies.refreshToken || ! await JWTHelpers.checkToken(req)) {
         return res.unauthorized();
     }
 

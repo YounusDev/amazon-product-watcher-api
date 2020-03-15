@@ -1,4 +1,10 @@
 module.exports = async function (req, res) {
+
+    //check already logged in
+    if(!!JWTHelpers.hasToken(req)) {
+        return res.forbidden();
+    }
+
     let errors = {};
 
     let email = req.param('email');
@@ -56,20 +62,22 @@ module.exports = async function (req, res) {
 
     let appSecret = sails.config.custom.appSecret;
     let jwtTime = sails.config.custom.jwtTime;
+    let jwtRefreshTime = sails.config.custom.jwtRefreshTime;
 
     let bearerToken = await sails.JWT.sign({
         data: createdUser
     }, appSecret, {expiresIn: jwtTime});
 
     let refreshToken = await sails.JWT.sign({
-        data: bearerToken
-    }, appSecret, {expiresIn: jwtTime});
+        data: {bearerToken: bearerToken, user: createdUser}
+    }, appSecret, {expiresIn: jwtRefreshTime / 1000});
+
+    res.cookie('refreshToken', refreshToken, { maxAge: jwtRefreshTime, httpOnly: true, signed:true });
 
     createdUser.meta = userMeta;
 
     return res.json({
         user: createdUser,
         bearerToken: bearerToken,
-        refreshToken: refreshToken
     }).status(200);
 };

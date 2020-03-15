@@ -1,6 +1,4 @@
 module.exports = async function (req, res) {
-    return res.json(req.me);
-
     let errors = {};
 
     let firstName = req.param('first_name');
