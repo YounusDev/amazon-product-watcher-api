@@ -21,5 +21,22 @@ module.exports = {
                 type: 'date'
             }
         }
-    ]
+    ],
+
+    withDomain: async function (opts) {
+        let userDomains = await UserDomain.find(opts);
+
+        if (!userDomains) {
+            return null;
+        }
+
+        userDomains = Promise.all(userDomains.map(async userDomain => {
+
+            userDomain.domain = await Domain.withMeta({id: userDomain.domainId });
+
+            return userDomain;
+        }));
+
+        return userDomains;
+    }
 };
