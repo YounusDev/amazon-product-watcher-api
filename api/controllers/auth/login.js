@@ -59,3 +59,5 @@ module.exports = async function (req, res) {
         bearerToken: bearerToken,
     }).status(200);
 };
+
+

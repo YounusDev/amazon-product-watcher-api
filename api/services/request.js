@@ -1,0 +1,68 @@
+module.exports.validate = function (req, res, fields) {
+    let errors = {};
+
+    Object.keys(fields).forEach((fieldName) => {
+        let response = '';
+
+        response = checkValidation(
+            req,
+            fieldName,
+            _.isPlainObject(fields[fieldName]) ? fields[fieldName].rule : fields[fieldName]
+        );
+
+        // if (_.isPlainObject(fields[fieldName])) {
+        // errors[fieldName] = checkValidation(req, fieldName, fields[fieldName].rule);
+        // } else {
+        // errors[fieldName] = checkValidation(req, fieldName, fields[fieldName]);
+        // }
+
+        if (response) errors[fieldName] = response;
+    });
+
+    if (Object.keys(errors).length) return res.json({errors: errors}) && false;
+
+    return true;
+
+    /*if (commonHelpers.objectHasAnyValue(errors).status) {
+
+        res.json({errors: commonHelpers.objectHasAnyValue(errors, true).formattedObject})
+
+        return false;
+    } else {
+        return true
+    }*/
+}
+
+function checkValidation(req, fieldName, fieldInfo) {
+    let error = '';
+    let rules = fieldInfo.split('|');
+
+    rules.forEach((rule) => {
+        if (!error) {
+
+            if (rule === 'required') {
+
+                if (!req.param(fieldName)) {
+                    error = _.lowerCase(fieldName) + ' field is required';
+                }
+
+            } else if (rule === 'string') {
+
+                if (!_.isString(req.param(fieldName))) {
+                    errors = _.lowerCase(fieldName) + ' field must be string';
+                }
+
+            } else if (rule === 'email') {
+
+                let re = /\S+@\S+\.\S+/;
+                let isMail = re.test(String(req.param(fieldName)).toLowerCase());
+
+                if (!isMail) {
+                    error = _.lowerCase(fieldName) + ' field must be email';
+                }
+            }
+        }
+    });
+
+    return error;
+}

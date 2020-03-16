@@ -1,24 +1,18 @@
 module.exports = async function (req, res) {
     let errors = {};
 
-    let firstName = req.param('first_name');
-    let lastName = req.param('last_name');
-
-    if (!firstName) {
-        errors.firstName = 'first_name field is required';
-    }
-    if (!lastName) {
-        errors.lastName = 'last_name field is required';
-    }
-
-    if (Object.keys(errors).length) {
-        return res.json({errors: errors}).status(422);
-    }
+    if (!request.validate(req, res, {
+        'first_name': 'string|required',
+        'last_name': {
+            rule: 'required|string'
+        },
+    })) return;
+    console.log(req.param('first_name'), req.param('last_name'))
 
     await UserMeta.updateOne({userId: req.me.id})
         .set({
-            firstName: firstName,
-            lastName: lastName
+            firstName: req.param('first_name'),
+            lastName: req.param('last_name')
         });
 
     let userWithMeta = await User.withMeta({id: req.me.id});
@@ -28,3 +22,8 @@ module.exports = async function (req, res) {
         user: userWithMeta
     }).status(200);
 };
+
+/*
+async function validate(req, res, fields) {
+}
+*/
