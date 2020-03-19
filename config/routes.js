@@ -15,6 +15,7 @@ module.exports.routes = {
     'GET /token/refresh': 'auth/refresh',
     'POST /register': 'auth/register',
     'POST /update-profile': 'profile/update-profile',
+    'GET /me': 'auth/me',
 
     'POST /domain/create': 'domain/store',
     'POST /domain/index': 'domain/index',
