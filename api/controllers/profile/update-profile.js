@@ -1,13 +1,9 @@
 module.exports = async function (req, res) {
-    let errors = {};
 
     if (!request.validate(req, res, {
         'first_name': 'string|required',
-        'last_name': {
-            rule: 'required|string'
-        },
+        'last_name': 'string|required'
     })) return;
-    console.log(req.param('first_name'), req.param('last_name'))
 
     await UserMeta.updateOne({userId: req.me.id})
         .set({
@@ -22,8 +18,3 @@ module.exports = async function (req, res) {
         user: userWithMeta
     }).status(200);
 };
-
-/*
-async function validate(req, res, fields) {
-}
-*/
