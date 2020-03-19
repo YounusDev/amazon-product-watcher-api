@@ -3,8 +3,8 @@ module.exports = async function (req, res) {
 
     let projectName = req.param('project_name');
     let domainUrl = req.param('domain_url');
-    let domainMeta = req.param('domain_meta');
-    let domainUseFor = req.param('domain_use_for');
+    //let domainMeta = req.param('domain_meta');
+    //let domainUseFor = req.param('domain_use_for');
 
     if (!projectName) {
         errors.firstName = 'project_name field is required';
@@ -17,17 +17,19 @@ module.exports = async function (req, res) {
         return res.json({errors: errors}).status(422);
     }
 
-    await DomainMeta.updateOne({userId: req.me.id})
-        .set({
-            //firstName: firstName,
-            //lastName: lastName
-        });
+    // await DomainMeta.updateOne({userId: req.me.id})
+    //     .set({
+    //         //firstName: firstName,
+    //         //lastName: lastName
+    //     });
+    //
+    // let domainWithMeta = await Domain.withMeta({id: req.me.id});
+    //
+    // //delete domainWithMeta.password;
+    //
+    // return res.json({
+    //     domain: domainWithMeta
+    // }).status(200);
 
-    let domainWithMeta = await Domain.withMeta({id: req.me.id});
-
-    //delete domainWithMeta.password;
-
-    return res.json({
-        domain: domainWithMeta
-    }).status(200);
+    return res.ok;
 };

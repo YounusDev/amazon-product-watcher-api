@@ -18,6 +18,7 @@ module.exports.routes = {
 
     'POST /domain/create': 'domain/store',
     'POST /domain/index': 'domain/index',
+    'POST /domain/update': 'domain/update',
 
 
 };
