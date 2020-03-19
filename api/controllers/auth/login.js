@@ -7,19 +7,16 @@ module.exports = async function (req, res) {
 
     let errors = {};
 
-    let email = req.param('email');
-    let password = req.param('password');
-
-    if (!email) {
-        errors.email = 'email field is required';
-    }
-    if (!password) {
-        errors.password = 'password field is required';
-    }
+    if (!request.validate(req, res, {
+        'email': 'required|email',
+        'password': 'required'
+    })) return;
 
     if (Object.keys(errors).length) {
         return res.json({errors: errors}).status(422);
     }
+
+    let email = req.param('email');
 
     let userRecord = await User.withMeta({
         email: email.toLowerCase()

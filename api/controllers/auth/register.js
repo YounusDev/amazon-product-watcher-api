@@ -5,35 +5,17 @@ module.exports = async function (req, res) {
         return res.forbidden();
     }
 
-    let errors = {};
+    if (!request.validate(req, res, {
+        'email': 'required|email',
+        'first_name': 'required',
+        'last_name': 'required',
+        'password': 'required|confirmed'
+    })) return;
 
     let email = req.param('email');
     let firstName = req.param('first_name');
     let lastName = req.param('last_name');
     let password = req.param('password');
-    let confirmPassword = req.param('confirm_password');
-
-    if (!email) {
-        errors.email = 'email field is required';
-    }
-    if (!firstName) {
-        errors.firstName = 'first_name field is required';
-    }
-    if (!lastName) {
-        errors.lastName = 'last_name field is required';
-    }
-    if (!password) {
-        errors.password = 'password field is required';
-    }
-
-    //check password match
-    if (password !== confirmPassword) {
-        errors.password = 'password and confirm password does not match';
-    }
-
-    if (Object.keys(errors).length) {
-        return res.json({errors: errors}).status(422);
-    }
 
     let checkUser = await User.findOne({
         email: email.toLowerCase()

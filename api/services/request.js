@@ -49,7 +49,7 @@ function checkValidation(req, fieldName, fieldInfo) {
             } else if (rule === 'string') {
 
                 if (!_.isString(req.param(fieldName))) {
-                    errors = _.lowerCase(fieldName) + ' field must be string';
+                    error = _.lowerCase(fieldName) + ' field must be string';
                 }
 
             } else if (rule === 'email') {
@@ -59,6 +59,12 @@ function checkValidation(req, fieldName, fieldInfo) {
 
                 if (!isMail) {
                     error = _.lowerCase(fieldName) + ' field must be email';
+                }
+
+            } else if (rule === 'confirmed'){
+
+                if (req.param(fieldName) !== req.param('confirm_password')) {
+                    error = _.lowerCase(fieldName) + ' and confirm password does not match';
                 }
             }
         }
