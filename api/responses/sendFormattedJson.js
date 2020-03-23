@@ -1,4 +1,4 @@
-module.exports = function sendFunction(obj, omit = ['createdAt', 'updatedAt'], checkChild = true) {
+module.exports = function sendFunction(obj, omit = [], checkChild = true) {
 
     let formattedData = formatFunc(_.cloneDeep(obj), omit, checkChild);
 
