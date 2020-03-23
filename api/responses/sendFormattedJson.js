@@ -1,43 +1,26 @@
-module.exports = async function sendFormattedJson(obj, omit = [], checkChild = true) {
+module.exports = function sendFunction(obj, omit = ['createdAt', 'updatedAt'], checkChild = true) {
 
-    try {
-        await Object.keys(obj).forEach((item) => {
+    let formattedData = formatFunc(_.cloneDeep(obj), omit, checkChild);
 
-            let attr = obj[item];
-
-            if (_.isPlainObject(attr)) {
-
-                if (checkChild) {
-
-                    Object.keys(attr).forEach((childItem) => {
-
-                        let childAttr = attr[childItem];
-
-                        if (_.isPlainObject(childAttr)) {
-                            sendFormattedJson(childAttr, omit);
-                        } else {
-                            removeOmitAttr(attr, omit);
-                        }
-                    });
-                }
-            } else {
-                removeOmitAttr(obj, omit);
-            }
-        });
-
-        return this.res.json(obj);
-
-    } catch (e) {}
+    return this.res.json(formattedData);
 };
 
-function removeOmitAttr(obj, omit) {
+function formatFunc(obj, omit, checkChild) {
 
-    delete obj.createdAt;
-    delete obj.updatedAt;
+    let formattedData = {};
 
-    if (omit.length > 0) {
-        omit.forEach((item) => {
-            delete obj[item];
-        });
-    }
+    Object.keys(obj).forEach((name) => {
+        let val = obj[name];
+
+        if (!omit.includes(name)) {
+
+            if (_.isPlainObject(val) && checkChild) {
+                formattedData[name] = formatFunc(val, omit, checkChild);
+            } else {
+                formattedData[name] = val;
+            }
+        }
+    });
+
+    return formattedData;
 }
