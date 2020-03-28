@@ -5,16 +5,10 @@ module.exports = async function (req, res) {
     //     return res.forbidden();
     // }
 
-    let errors = {};
-
     if (!request.validate(req, res, {
         'email': 'required|email',
         'password': 'required'
     })) return;
-
-    if (Object.keys(errors).length) {
-        return res.json({errors: errors}).status(422);
-    }
 
     let email = req.param('email');
 
