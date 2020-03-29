@@ -1,9 +1,9 @@
 module.exports = async function (req, res) {
 
-    let domainId = req.param('domain_id');
+    let usersDomainId = req.param('id');
 
     let userDomain = await UserDomain.findOne({
-        domainId: domainId
+        domainId: usersDomainId
     });
 
     if (!userDomain) {
