@@ -21,5 +21,5 @@ module.exports.routes = {
     'POST /domain/index': 'domain/index',
     'POST /domain/update': 'domain/update',
 
-    'GET /amazon-product/:domain_id': 'amazon_product/details',
+    'GET /projects/:id/amazon-products': 'amazon_product/product', // users_domains id
 };
