@@ -3,7 +3,8 @@ module.exports = async function (req, res) {
     let usersDomainId = req.param('id');
 
     let userDomain = await UserDomain.findOne({
-        domainId: usersDomainId
+        id: usersDomainId,
+        userId: req.me.id
     });
 
     if (!userDomain) {
@@ -40,10 +41,15 @@ module.exports = async function (req, res) {
 
         let amzProductMeta = amazonProductMeta.find(amzProductMeta => amzProductMeta.amazonProductId === amazonProduct.id);
 
+        let amzProductAffiliateId = amazonProductInPage.find(
+            amazonProductInPage => amazonProductInPage.amazonProductId === amazonProduct.id
+        ).affiliateId;
+
         amazonProductInfo.push({
             id: amazonProduct.id,
             productName: amzProductMeta.metas.productName,
             url: amazonProduct.url,
+            affiliateId: amzProductAffiliateId,
             status: amzProductMeta.pageStatus,
             lastUpdated: amazonProduct.createdAt,
         });
