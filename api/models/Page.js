@@ -10,8 +10,7 @@ module.exports = {
             type: 'string'
         },
         nextUpdateAt: {
-            type: 'string',
-            columnType: 'date'
+            type: 'number', autoCreatedAt: true,
         }
     }
 };
