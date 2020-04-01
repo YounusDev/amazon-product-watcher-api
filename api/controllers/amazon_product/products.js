@@ -35,7 +35,7 @@ module.exports = async function (req, res) {
 
     let amazonProductInfo = [];
 
-    Object.keys(amazonProducts).forEach((objKey, index) => {
+    Object.keys(amazonProducts).forEach(objKey => {
 
         let amazonProduct = amazonProducts[objKey];
 

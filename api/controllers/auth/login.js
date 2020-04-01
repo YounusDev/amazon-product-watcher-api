@@ -17,13 +17,13 @@ module.exports = async function (req, res) {
     });
 
     if (!userRecord) {
-        return res.json({message: 'email or password does not match'}).status(404);
+        return res.status(404).json({message: 'email or password does not match'});
     }
 
     try {
         await sails.helpers.passwords.checkPassword(req.param('password'), userRecord.password);
     } catch (e) {
-        return res.json({message: 'email or password does not match'}).status(404);
+        return res.status(404).json({message: 'email or password does not match'});
     }
 
     delete userRecord.password;
@@ -45,10 +45,10 @@ module.exports = async function (req, res) {
 
     res.cookie('refreshToken', refreshToken, { maxAge: jwtRefreshTime, httpOnly: true, signed:true });
 
-    return res.json({
+    return res.status(200).json({
         user: userRecord, // send userWithUserMeta
         bearerToken: bearerToken,
-    }).status(200);
+    });
 };
 
 

@@ -4,7 +4,7 @@ module.exports = async function (req, res) {
 
     delete userWithMeta.password;
 
-    return res.json(userWithMeta).status(200);
+    return res.status(200).json(userWithMeta);
 };
 
 

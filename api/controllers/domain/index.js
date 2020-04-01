@@ -9,7 +9,7 @@ module.exports = async function (req, res) {
     // }
 
     if (Object.keys(errors).length) {
-        return res.json({errors: errors}).status(422);
+        return res.status(422).json({errors: errors});
     }
 
     let userProject = await UserDomain.withDomain({
@@ -17,10 +17,10 @@ module.exports = async function (req, res) {
     });
 
     if (!userProject) {
-        return res.json({message: 'domain record does not found'}).status(404);
+        return res.status(404).json({message: 'domain record does not found'});
     }
 
-    return res.json({
+    return res.status(200).json({
         userProject : userProject
-    }).status(200);
+    });
 };

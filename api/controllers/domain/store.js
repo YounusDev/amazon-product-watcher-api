@@ -13,7 +13,7 @@ module.exports = async function (req, res) {
     }
 
     if (Object.keys(errors).length) {
-        return res.json({errors: errors}).status(422);
+        return res.status(422).json({errors: errors});
     }
 
     let domainInfo = await Domain.findOne({
@@ -27,10 +27,10 @@ module.exports = async function (req, res) {
         });
 
         if (checkUserDomain){
-            return res.json({
+            return res.status(422).json({
                 errors:
                     {'message': 'this domain Url already used'}
-            }).status(422);
+            });
         }
     }
 
@@ -53,11 +53,11 @@ module.exports = async function (req, res) {
         domainUseFor: {}
     }).fetch();
 
-    return res.json({
+    return res.status(200).json({
         domain : {
             domainId: domainInfo.id,
             domainUrl: domainInfo.url,
             projectName: userDomain.projectName,
         }
-    }).status(200);
+    });
 };

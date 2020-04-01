@@ -2,9 +2,9 @@ module.exports = async function (req, res) {
     let refreshToken = req.signedCookies.refreshToken;
 
     if (!refreshToken){
-        return res.json(
+        return res.status(422).json(
             {errors: ['refresh token not found']}
-        ).status(422);
+        );
     }
 
     try {
@@ -18,18 +18,19 @@ module.exports = async function (req, res) {
             let bearerToken = await sails.JWT.sign({
                 data: decodedRefreshToken.data.user
             }, appSecret, {expiresIn: jwtTime});
-            return res.json({
+
+            return res.status(200).json({
                 bearerToken: bearerToken,
-            }).status(200);
+            });
 
         } else {
-            return res.json(
+            return res.status(422).json(
                 {errors: ['refresh token not found']}
-            ).status(422);
+            );
         }
     } catch (e) {
-        return res.json(
+        return res.status(422).json(
             {errors: ['refresh token not found']}
-        ).status(422);
+        );
     }
 };

@@ -14,7 +14,7 @@ module.exports = async function (req, res) {
     }
 
     if (Object.keys(errors).length) {
-        return res.json({errors: errors}).status(422);
+        return res.status(422).json({errors: errors});
     }
 
     // await DomainMeta.updateOne({userId: req.me.id})
@@ -27,9 +27,9 @@ module.exports = async function (req, res) {
     //
     // //delete domainWithMeta.password;
     //
-    // return res.json({
+    // return res.status(200).json({
     //     domain: domainWithMeta
-    // }).status(200);
+    // });
 
     return res.ok;
 };

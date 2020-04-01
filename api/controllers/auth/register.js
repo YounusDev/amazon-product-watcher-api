@@ -22,10 +22,10 @@ module.exports = async function (req, res) {
     });
 
     if (checkUser) {
-        return res.json({
+        return res.status(422).json({
             errors:
                 {'email': 'this email already used'}
-        }).status(422);
+        });
     }
 
     let createdUser = await User.create({
@@ -58,8 +58,8 @@ module.exports = async function (req, res) {
 
     createdUser.meta = userMeta;
 
-    return res.json({
+    return res.status(200).json({
         user: createdUser,
         bearerToken: bearerToken,
-    }).status(200);
+    });
 };
