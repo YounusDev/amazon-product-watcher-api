@@ -19,7 +19,7 @@ module.exports.validate = function (req, res, fields) {
         if (response) errors[fieldName] = response;
     });
 
-    if (Object.keys(errors).length) return res.json({errors: errors}) && false;
+    if (Object.keys(errors).length) return res.status(422).json({errors: errors}) && false;
 
     return true;
 

@@ -8,7 +8,7 @@ module.exports = async function (req, res) {
     });
 
     if (!userDomain) {
-        return res.json({message: 'invalid domain id'}).status(404);
+        return res.status(404).json({message: 'invalid domain id'});
     }
 
     let affiliateIds = userDomain.domainUseFor.amazonProductCheck.affiliateIds;
@@ -51,10 +51,10 @@ module.exports = async function (req, res) {
             url: amazonProduct.url,
             affiliateId: amzProductAffiliateId,
             status: amzProductMeta.pageStatus,
-            lastUpdated: amazonProduct.createdAt,
+            lastUpdated: amazonProduct.createdAt
         });
     });
 
-    return res.json(amazonProductInfo).status(200);
+    return res.status(200).json(amazonProductInfo);
 };
 
