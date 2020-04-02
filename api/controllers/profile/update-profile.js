@@ -1,8 +1,8 @@
 module.exports = async function (req, res) {
 
     if (!request.validate(req, res, {
-        'first_name': 'string|required',
-        'last_name': 'string|required'
+        'first_name': 'required',
+        'last_name': 'required'
     })) return;
 
     await UserMeta.updateOne({userId: req.me.id})

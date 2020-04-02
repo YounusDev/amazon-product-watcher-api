@@ -12,7 +12,7 @@ module.exports.routes = {
 
     'GET /': 'defaults/thanks',
     'POST /login': 'auth/login',
-    'GET /token/refresh': 'auth/refresh',
+    'GET /refresh': 'auth/refresh',
     'POST /register': 'auth/register',
     'POST /update-profile': 'profile/update-profile',
     'GET /me': 'auth/me',
