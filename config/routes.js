@@ -10,15 +10,15 @@
 
 module.exports.routes = {
 
-    'GET /': 'defaults/thanks',
-    'POST /login': 'auth/login',
-    'GET /refresh': 'auth/refresh',
-    'POST /register': 'auth/register',
+    'GET /'               : 'defaults/thanks',
+    'POST /login'         : 'auth/login',
+    'GET /refresh'        : 'auth/refresh',
+    'POST /register'      : 'auth/register',
     'POST /update-profile': 'profile/update-profile',
-    'GET /me': 'auth/me',
+    'GET /me'             : 'auth/me',
 
-    'POST /projects': 'domain/store',
-    'GET /projects': 'domain/index',
+    'POST /projects'     : 'domain/store',
+    'GET /projects'      : 'domain/index',
     'PATCH /projects/:id': 'domain/update',
 
     'GET /projects/:id/amazon-products': 'amazon_product/products', // users_domains id

@@ -12,7 +12,9 @@
  * For additional options and more information, see:
  * https://sailsjs.com/config/security
  */
+
 module.exports.security = {
+
     /***************************************************************************
      *                                                                          *
      * CORS is like a more modern version of JSONP-- it allows your application *
@@ -25,12 +27,15 @@ module.exports.security = {
      * https://sailsjs.com/docs/concepts/security/cors                          *
      *                                                                          *
      ***************************************************************************/
+
     cors: {
-        allRoutes: true,
-        allowOrigins: ['http://localhost:8080'],
-        allowCredentials: true,
-        allowRequestHeaders: 'content-type, authorization'
+        allRoutes          : true,
+        allowOrigins       : ['http://localhost:8080'],
+        allowCredentials   : true,
+        allowRequestHeaders: "content-type, authorization"
     },
+
+
     /****************************************************************************
      *                                                                           *
      * By default, Sails' built-in CSRF protection is disabled to facilitate     *
@@ -44,5 +49,7 @@ module.exports.security = {
      * https://sailsjs.com/docs/concepts/security/csrf                           *
      *                                                                           *
      ****************************************************************************/
+
     // csrf: false
+
 };

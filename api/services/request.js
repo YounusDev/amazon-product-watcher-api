@@ -16,10 +16,10 @@ module.exports.validate = function (req, res, fields) {
         // errors[fieldName] = checkValidation(req, fieldName, fields[fieldName]);
         // }
 
-        if (response) errors[fieldName] = response;
+        if (response) {errors[fieldName] = response;}
     });
 
-    if (Object.keys(errors).length) return res.status(422).json({errors: errors}) && false;
+    if (Object.keys(errors).length) {return res.json({errors: errors}) && false;}
 
     return true;
 
@@ -31,7 +31,7 @@ module.exports.validate = function (req, res, fields) {
     } else {
         return true
     }*/
-}
+};
 
 function checkValidation(req, fieldName, fieldInfo) {
     let error = '';
@@ -61,7 +61,7 @@ function checkValidation(req, fieldName, fieldInfo) {
                     error = _.lowerCase(fieldName) + ' field must be email';
                 }
 
-            } else if (rule === 'confirmed'){
+            } else if (rule === 'confirmed') {
 
                 if (req.param(fieldName) !== req.param('confirm_password')) {
                     error = _.lowerCase(fieldName) + ' and confirm password does not match';
