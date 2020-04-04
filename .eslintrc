@@ -63,9 +63,9 @@
             "warn",
             "last"
         ],
-        "curly": [
-            "warn"
-        ],
+//        "curly": [
+//            "warn"
+//        ],
         "eqeqeq": [
             "error",
             "always"
