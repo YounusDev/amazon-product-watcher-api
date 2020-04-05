@@ -8,7 +8,7 @@ module.exports = async function (req, res) {
     });
 
     if (!userDomain) {
-        return res.status(404).json({message: 'invalid domain id'});
+        return res.status(404).json({message: 'invalid project id'});
     }
 
     let affiliateIds = userDomain.domainUseFor.amazonProductCheck.affiliateIds;

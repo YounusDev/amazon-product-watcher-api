@@ -25,4 +25,6 @@ module.exports.routes = {
     'POST /amazon-products/:id': 'amazon_product/product-in-pages', // amazonproduct id
 
     'POST /broken-links/:project_id': 'broken_link/index', // domain id
+
+    'POST /guest-links/:project_id': 'guest_link/index', // domain id
 };
