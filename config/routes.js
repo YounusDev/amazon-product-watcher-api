@@ -21,6 +21,8 @@ module.exports.routes = {
     'GET /projects': 'domain/index',
     'PATCH /projects/:id': 'domain/update',
 
-    'GET /projects/:id/amazon-products': 'amazon_product/products', // users_domains id
-    'POST /amazon-products/:id': 'amazon_product/product-in-pages', // amazon_products id
+    'GET /projects/:id/amazon-products': 'amazon_product/products', // userdomain id
+    'POST /amazon-products/:id': 'amazon_product/product-in-pages', // amazonproduct id
+
+    'POST /broken-links/:project_id': 'broken_link/index', // domain id
 };
