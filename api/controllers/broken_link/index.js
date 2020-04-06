@@ -2,12 +2,21 @@ module.exports = async function (req, res) {
 
     let projectId = req.param('project_id');
 
+    let userDomain = await UserDomain.findOne({
+        id: projectId,
+        userId: req.me.id
+    });
+
+    if (!userDomain) {
+        return res.status(404).json({message: 'invalid project id'});
+    }
+
     let pages = await Page.find({
-        domainId: projectId
+        domainId: userDomain.domainId
     });
 
     if (!pages) {
-        return res.status(404).json({message: 'invalid project id'});
+        return res.status(200).json([]);
     }
 
     //get pageIds array
