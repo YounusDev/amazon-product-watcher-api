@@ -2,8 +2,9 @@ module.exports = async function (req, res) {
 
     let projectId = req.param('project_id');
 
+    //check owner
     let userDomain = await UserDomain.findOne({
-        domainId: projectId,
+        id: projectId,
         userId: req.me.id
     });
 
@@ -28,7 +29,6 @@ module.exports = async function (req, res) {
         let checkLinkInGuestDomain = checkLinkInGuestDomains[objKey];
 
         checkLinkInGuestDomainsInfo.push({
-            id: checkLinkInGuestDomain.id,
             url: checkLinkInGuestDomain.url,
             remoteUrl: checkLinkInGuestDomain.remoteUrl,
             status: checkLinkInGuestDomain.linkInfo.status,
