@@ -1,35 +1,34 @@
 module.exports = async function (req, res) {
-    let errors = {};
 
-    let projectName = req.param('project_name');
-    let domainUrl = req.param('domain_url');
-    //let domainMeta = req.param('domain_meta');
-    //let domainUseFor = req.param('domain_use_for');
+    let usersProjectId = req.param('id');
 
-    if (!projectName) {
-        errors.firstName = 'project_name field is required';
-    }
-    if (!domainUrl) {
-        errors.lastName = 'domain_url field is required';
+    let userProject = await UserDomain.findOne({
+        domainId: usersProjectId,
+        userId: req.me.id
+    });
+
+    if (!userProject) {
+        return res.status(404).json({message: 'invalid project id'});
     }
 
-    if (Object.keys(errors).length) {
-        return res.status(422).json({errors: errors});
-    }
+    if (!request.validate(req, res, {
+        'project_name': 'required',
+        'domain_url': 'required'
+    })) return;
 
-    // await DomainMeta.updateOne({userId: req.me.id})
-    //     .set({
-    //         //firstName: firstName,
-    //         //lastName: lastName
-    //     });
-    //
-    // let domainWithMeta = await Domain.withMeta({id: req.me.id});
-    //
-    // //delete domainWithMeta.password;
-    //
-    // return res.status(200).json({
-    //     domain: domainWithMeta
-    // });
+    await UserDomain.updateOne({userId: req.me.id})
+        .set({
+            projectName: req.param('project_name')
+        });
 
-    return res.ok;
+    await Domain.updateOne({id: usersProjectId})
+        .set({
+            url: req.param('domain_url')
+        });
+
+    let updatedProjectDetails = await UserDomain.withDomain({domainId: usersProjectId});
+
+    return res.status(200).json({
+        project: updatedProjectDetails
+    });
 };
