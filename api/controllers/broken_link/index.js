@@ -16,7 +16,7 @@ module.exports = async function (req, res) {
     });
 
     if (!pages) {
-        return res.status(200).json([]);
+        return res.status(200).json('broken links not found');
     }
 
     //get pageIds array

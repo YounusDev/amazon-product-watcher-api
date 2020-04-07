@@ -19,7 +19,7 @@ module.exports = async function (req, res) {
     });
 
     if (!checkLinkInGuestDomains) {
-        return res.status(404).json({message: 'invalid project id'});
+        return res.status(404).json({message: 'guest links not found'});
     }
 
     let checkLinkInGuestDomainsInfo = [];
