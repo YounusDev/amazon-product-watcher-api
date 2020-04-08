@@ -21,7 +21,7 @@ module.exports.routes = {
     'GET /projects'      : 'domain/index',
     'PATCH /projects/:id': 'domain/update',
 
-    //'PATCH /projects/:id/amazon-products': 'TEST/TEST',
+    'PATCH /projects/:id/amazon-products': 'amazon_product/update',
     //'PATCH /projects/:id/broken-links': 'TEST/TEST',
     //'PATCH /projects/:id/guest-posts': 'TEST/TEST',
 

@@ -4,7 +4,7 @@ module.exports = async function (req, res) {
 
 
     let userProject = await UserDomain.findOne({
-        domainId    : usersProjectId,
+        id    : usersProjectId,
         userId: req.me.id
     });
 
