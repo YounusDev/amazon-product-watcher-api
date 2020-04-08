@@ -23,7 +23,7 @@ module.exports.routes = {
 
     'PATCH /projects/:id/amazon-products': 'amazon_product/update',
     'PATCH /projects/:id/broken-links': 'broken_link/update',
-    //'PATCH /projects/:id/guest-posts': 'TEST/TEST',
+    'PATCH /projects/:id/guest-posts': 'guest_link/update',
 
     'GET /projects/:id/amazon-products': 'amazon_product/products', // userdomain id
     'POST /amazon-products/:id': 'amazon_product/product-in-pages', // amazonproduct id
