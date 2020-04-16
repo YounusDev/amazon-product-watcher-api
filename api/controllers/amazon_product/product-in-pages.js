@@ -17,7 +17,7 @@ module.exports = async function (req, res) {
 
     // return only count of product in pages
     if (onlyTotal) {
-        return res.status(404).json({count: amazonProductInPage.length});
+        return res.status(200).json({count: amazonProductInPage.length});
     }
 
     //get pageIds array
@@ -36,7 +36,10 @@ module.exports = async function (req, res) {
 
     Object.keys(pages).forEach(objKey => {
         let item = pages[objKey];
-        pageUrl.push({ pageUrl: item.url});
+        pageUrl.push({
+            pageUrl: item.url,
+            lastUpdated: item.nextUpdateAt
+        });
     });
 
     return res.status(200).json(pageUrl);
