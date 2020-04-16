@@ -32,7 +32,7 @@ module.exports = async function (req, res) {
             url: checkLinkInGuestDomain.url,
             remoteUrl: checkLinkInGuestDomain.remoteUrl,
             status: checkLinkInGuestDomain.linkInfo.status,
-            lastUpdated: checkLinkInGuestDomain.createdAt
+            lastUpdated: checkLinkInGuestDomain.nextUpdateAt
         });
     });
 

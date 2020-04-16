@@ -51,7 +51,7 @@ module.exports = async function (req, res) {
             url: amazonProduct.url,
             affiliateId: amzProductAffiliateId,
             status: amzProductMeta.pageStatus,
-            lastUpdated: amazonProduct.createdAt
+            lastUpdated: amazonProduct.nextUpdateAt
         });
     });
 
