@@ -42,7 +42,7 @@ module.exports = async function (req, res) {
         brokenLinkInfo.push({
             pageId : page.id,
             url: page.url,
-            updatedAt: page.nextUpdateAt,
+            lastUpdated: page.nextUpdateAt,
             status: pageMeta.pageStatus
         });
     });
