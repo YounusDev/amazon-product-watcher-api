@@ -9,7 +9,7 @@ module.exports = async function (req, res) {
         errors.domainUrl = 'domain_url field is required';
     }
     if (!projectName) {
-        errors.domainUrl = 'project_name field is required';
+        errors.projectName = 'project_name field is required';
     }
 
     if (Object.keys(errors).length) {
