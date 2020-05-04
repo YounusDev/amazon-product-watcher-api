@@ -1,20 +1,12 @@
 module.exports = async function (req, res) {
 
-    let errors = {};
+    if (!request.validate(req, res, {
+        'domain_url': 'required',
+        'project_name': 'required'
+    })) return;
 
     let domainUrl = req.param('domain_url');
     let projectName = req.param('project_name');
-
-    if (!domainUrl) {
-        errors.domainUrl = 'domain_url field is required';
-    }
-    if (!projectName) {
-        errors.projectName = 'project_name field is required';
-    }
-
-    if (Object.keys(errors).length) {
-        return res.status(422).json({errors: errors});
-    }
 
     let domainInfo = await Domain.findOne({
         url: domainUrl,
