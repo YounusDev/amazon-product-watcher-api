@@ -19,10 +19,7 @@ module.exports = async function (req, res) {
         });
 
         if (checkUserDomain){
-            return res.status(422).json({
-                errors:
-                    {'message': 'this domain Url already used'}
-            });
+            return res.status(422).json({message: 'this domain Url already used'});
         }
     }
 
