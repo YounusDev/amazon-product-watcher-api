@@ -1,13 +1,15 @@
 module.exports = {
+    tableName: 'domains_meta',
+    
     attributes: [
         {
-            domainId: {
-                model: 'domain',
-                type: 'number',
+            domainId  : {
+                model   : 'domain',
+                type    : 'string',
                 required: true
             },
             domainInfo: {
-                type: 'json',
+                type    : 'json',
                 required: true,
             }
         }

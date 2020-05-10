@@ -1,28 +1,22 @@
 module.exports = {
+    tableName: 'domains',
+    
     attributes: [
         {
             url: {
-                type: 'string',
+                type    : 'string',
                 required: true
-            },
-            status: {
-                type: 'string'
-            },
-            nextUpdateAt: {
-                type: 'date'
             }
         }
     ],
-
+    
     withMeta: async function (opts) {
         let domain = await Domain.findOne(opts);
-
-        if (!domain){
-            return null;
-        }
-
-        domain.meta = await DomainMeta.findOne({domainId: domain.id});
-
+        
+        if (!domain) return null;
+        
+        domain.meta = await DomainMeta.findOne({domain_id: domain.id});
+        
         return domain;
     }
 };

@@ -37,8 +37,5 @@
     "url": "git://github.com/younus/amzwatch-api.git"
   },
   "author": "younus",
-  "license": "",
-  "engines": {
-    "node": "^13.10"
-  }
+  "license": ""
 }
