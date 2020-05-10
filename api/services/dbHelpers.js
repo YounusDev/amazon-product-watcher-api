@@ -1,4 +1,4 @@
-module.exports.get = async function (model, options = {}, req = null, limit = 1) {
+module.exports.get = async function (model, options = {}, req = null, limit = 10) {
     let queryOptions = [];
     let skip         = 0;
     let current_page = 1;
@@ -6,11 +6,11 @@ module.exports.get = async function (model, options = {}, req = null, limit = 1)
     if (req) {
         if (_.has(req.query, 'page')) {
             skip         = (parseInt(req.query.page) - 1) * limit;
-            current_page = parseInt(req.query.page)
+            current_page = parseInt(req.query.page);
         }
     }
-    //
-    // if (!_.has(options, 'limit')) queryOptions.limit = limit;
+    
+    if (!_.has(options, 'limit')) queryOptions.limit = limit;
     // queryOptions.skip  = skip;
     // queryOptions.where = !_.has(options, 'where') ? _.cloneDeep(options) : _.cloneDeep(options.where);
     queryOptions = [
@@ -25,7 +25,7 @@ module.exports.get = async function (model, options = {}, req = null, limit = 1)
                         $skip: skip
                     },
                     {
-                        $limit: limit
+                        $limit: !_.has(options, 'limit') ? limit : options.limit
                     }
                 ],
                 total_rows: [
