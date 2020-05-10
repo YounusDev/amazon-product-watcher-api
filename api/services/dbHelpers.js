@@ -35,12 +35,25 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
             $project: {
                 data           : 1,
                 pagination_meta: {
-                    total: {$arrayElemAt: ['$total_rows.count', 0]},
+                    total       : {
+                        $arrayElemAt: [
+                            '$total_rows.count',
+                            0
+                        ]
+                    },
                     current_page: {$literal: current_page}
                 }
             }
         }
     ];
     
-    return await model(queryOptions);
+    let result = await model(queryOptions);
+    
+    if (result && _.hasIn(result, 'pagination_meta')) {
+        let paginationMeta = result.pagination_meta;
+        
+        paginationMeta.last_page = Math.ceil(parseInt(paginationMeta.total) / limit);
+    }
+    
+    return result;
 };
