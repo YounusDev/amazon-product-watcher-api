@@ -11,10 +11,8 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
     }
     
     if (!_.has(options, 'limit')) queryOptions.limit = limit;
-    // queryOptions.skip  = skip;
-    // queryOptions.where = !_.has(options, 'where') ? _.cloneDeep(options) : _.cloneDeep(options.where);
+    
     queryOptions = [
-        
         {
             $facet: {
                 data      : [

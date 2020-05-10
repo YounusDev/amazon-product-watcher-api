@@ -7,7 +7,7 @@ module.exports = async function (req, res) {
         req
     );
     
-    if (!userProject || !userProject.length) {
+    if (!userProject || !userProject.data.length) {
         return res.status(404).json({message: 'user has no projects'});
     }
     

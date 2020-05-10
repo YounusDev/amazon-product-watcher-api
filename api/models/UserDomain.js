@@ -41,7 +41,7 @@ module.exports = {
             return userDomain;
         }));
         
-        return userDomains;
+        return userDomains[0];
     },
     
     withDomain: async function (opts) {
