@@ -1,21 +1,20 @@
 module.exports = {
-    attributes: [
+    tableName: 'users',
+
+    attributes:
         {
             email: {
-                type: 'email',
-                required: true
+                type: 'string'
             },
             password: {
                 type: 'string',
-                required: true,
                 protect: true
             },
             validated: {
                 type: 'string',
                 defaultsTo: 'active'
             }
-        }
-    ],
+        },
 
     withMeta: async function (opts) {
         let user = await User.findOne(opts);
