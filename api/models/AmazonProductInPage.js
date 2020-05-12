@@ -15,7 +15,7 @@ module.exports = {
         }
     },
     
-    amazon_productsAggregated: async function (opts) {
+    amazonProductsInPagesAggregated: async function (opts) {
         
         let amazon_products_collection = AmazonProductInPage.getDatastore().manager.collection(AmazonProductInPage.tableName);
         

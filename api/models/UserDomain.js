@@ -23,6 +23,15 @@ module.exports = {
             columnName: 'deactivated_at'
         }
     },
+    
+    userDomainAggregated: async function (opts) {
+        let users_domains_collection = UserDomain.getDatastore().manager.collection(UserDomain.tableName);
+    
+        let userDomains = await users_domains_collection.aggregate(opts)
+            .toArray();
+    
+        return userDomains[0];
+    },
 
     withDomainAggregated: async function (opts) {
 

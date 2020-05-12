@@ -97,3 +97,22 @@ module.exports.get = async function (model, options = {}, req = null, limit = 1)
     
     return result;
 };
+
+module.exports.getSingle = async function (model, options = []) {
+    // console.log(options);
+    
+    let result = await model(options);
+    
+    if (!result) return null;
+    
+    Object.keys(result).map(key => {
+        if (key === '_id') {
+            result.id = String(result._id);
+            
+            delete result._id;
+        }
+    });
+    
+    return result;
+};
+

@@ -12,7 +12,7 @@ module.exports = async function (req, res) {
     }
     
     let amazonProducts = await dbHelpers.get(
-        AmazonProductInPage.amazon_productsAggregated,
+        AmazonProductInPage.amazonProductsInPagesAggregated,
         {
             bothStageQuery: {
                 0: {$match: {}},
@@ -117,6 +117,6 @@ module.exports = async function (req, res) {
         req
     );
     
-    return res.status(200).json(amazonProducts);
+    return res.status(200).json({projects: amazonProducts});
 };
 
