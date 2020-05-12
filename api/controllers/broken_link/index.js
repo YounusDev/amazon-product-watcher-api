@@ -11,41 +11,48 @@ module.exports = async function (req, res) {
         return res.status(404).json({message: 'invalid project id'});
     }
 
-    let pages = await Page.find({
-        domainId: userDomain.domainId
-    });
+    // use db helpers get func only for normal find. nor findOne. only find support given
+    let pagesResult = await dbHelpers.get(
+        Page.pageAggregated,
+        {
+            where: {domainId: userDomain.domainId},
+            // lookup: {
+            //     from: 'pages_meta',
+            //     let: {id: '$_id'},
+            //     pipeline: [
+            //         {
+            //             $match: {
+            //                 $expr: {
+            //                     $and: {
+            //                         $eq: [{$toString: '$$id'}, '$page_id']
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     ],
+            //     as: 'meta'
+            // }
+        },
+        req
+    );
+
+    let pages = pagesResult.data;
 
     if (!pages) {
         return res.status(200).json('broken links not found');
     }
 
-    //get pageIds array
-    let pageIds = [];
+    await Promise.all(Object.keys(pages).map(async (objKey) => {
+        page = pages[objKey];
 
-    Object.keys(pages).forEach(objKey => {
-        let item = pages[objKey];
-        pageIds.push(item.id);
-    });
-
-    let pagesMetas = await PageMeta.find({
-        pageId: pageIds,
-    });
-
-    let brokenLinkInfo = [];
-
-    Object.keys(pages).forEach(objKey => {
-
-        let page = pages[objKey];
-
-        let pageMeta = pagesMetas.find(pagesMeta => pagesMeta.pageId === page.id);
-
-        brokenLinkInfo.push({
-            pageId : page.id,
-            url: page.url,
-            lastUpdated: page.nextUpdateAt,
-            status: pageMeta.pageStatus
+        let pageMeta = await PageMeta.find({
+            pageId: page['id']
         });
-    });
 
-    return res.status(200).json(brokenLinkInfo);
+        page.meta = pageMeta;
+
+        return page;
+    }));
+
+    return res.status(200).json(pagesResult);
 };

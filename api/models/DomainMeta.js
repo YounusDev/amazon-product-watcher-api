@@ -3,7 +3,7 @@ module.exports = {
 
     attributes: {
         domainId  : {
-            model   : 'domain',
+            type   : 'string',
             columnName: 'domain_id'
         },
         domainInfo: {
