@@ -12,26 +12,10 @@ module.exports.get = async function (model, options = {}, req = null, limit = 1)
     
     if (!_.has(options, 'limit')) queryOptions.limit = limit;
     
-    let originalMatchQuery = !_.has(options, 'where') ? _.cloneDeep(options) : _.cloneDeep(options.where);
-    let lookupQuery        = !_.has(options, 'lookup') ? null : _.cloneDeep(options.lookup);
-    let unwindQuery        = !_.has(options, 'lookup') ? null : _.cloneDeep(options.unwind);
-    
-    let finalMatchQuery = {};
-    
-    Object.keys(originalMatchQuery).map(key => {
-        finalMatchQuery[_.snakeCase(key)] = originalMatchQuery[key];
-    });
-    
     queryOptions = [
-        {
-            $match: finalMatchQuery,
-        },
         {
             $facet: {
                 data      : [
-                    {
-                        $match: finalMatchQuery,
-                    },
                     {
                         $skip: skip
                     },
@@ -60,15 +44,36 @@ module.exports.get = async function (model, options = {}, req = null, limit = 1)
         }
     ];
     
-    if (lookupQuery) {
-        // push lookup query at 2nd position
-        queryOptions[1].$facet.data.splice(1, 0, {$lookup: lookupQuery});
+    if (!_.hasIn(options, 'pageStageQuery') && !_.hasIn(options, 'dataStageQuery') && !_.hasIn(options, 'bothStageQuery')) {
+        let originalMatchQuery = !_.has(options, 'where') ? _.cloneDeep(options) : _.cloneDeep(options.where);
+        let lookupQuery        = !_.has(options, 'lookup') ? null : _.cloneDeep(options.lookup);
+        let unwindQuery        = !_.has(options, 'lookup') ? null : _.cloneDeep(options.unwind);
+        
+        let finalMatchQuery = {};
+        
+        Object.keys(originalMatchQuery).map(key => {
+            finalMatchQuery[_.snakeCase(key)] = originalMatchQuery[key];
+        });
+        
+        queryOptions.splice(0, 0, {$match: finalMatchQuery});
+        queryOptions[1].$facet.data.splice(0, 0, {$match: finalMatchQuery});
+        
+        if (lookupQuery) {
+            // push lookup query at 2nd position
+            queryOptions[1].$facet.data.splice(1, 0, {$lookup: lookupQuery});
+        }
+        if (unwindQuery) {
+            // push lookup query at 3rd position
+            // its now only for getting single single item. dont use unwind if you has more than 1 elm for now
+            queryOptions[1].$facet.data.splice(2, 0, {$unwind: unwindQuery});
+        }
+    } else {
+        Object.keys(options.bothStageQuery).map((key, index) => {
+            queryOptions.splice(index, 0, options.bothStageQuery[key]);
+        });
     }
-    if (unwindQuery) {
-        // push lookup query at 3rd position
-        // its now only for getting single single item. dont use unwind if you has more than 1 elm for now
-        queryOptions[1].$facet.data.splice(2, 0, {$unwind: unwindQuery});
-    }
+    
+    // console.log(queryOptions);
     
     let result = await model(queryOptions);
     
