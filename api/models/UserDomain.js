@@ -31,8 +31,6 @@ module.exports = {
         let userDomains = await users_domains_collection.aggregate(opts)
             .toArray();
 
-        if (!userDomains[0].data.length) return null;
-
         userDomains[0].data = await Promise.all(userDomains[0].data.map(async userDomain => {
             userDomain.domain = await Domain.withMeta({
                 where: {id: userDomain.domain_id}
