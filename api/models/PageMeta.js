@@ -1,13 +1,17 @@
 module.exports = {
+    tableName: 'pages_meta',
+
     attributes: {
         pageId: {
-            model: 'page'
+            type: 'string',
+            columnName: 'page_id'
         },
         content: {
             type: 'string'
         },
         pageStatus: {
-            type: 'string'
+            type: 'string',
+            columnName: 'page_status'
         }
     }
 };
