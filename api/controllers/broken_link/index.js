@@ -15,7 +15,7 @@ module.exports = async function (req, res) {
     let pagesResult = await dbHelpers.get(
         Page.pageAggregated,
         {
-            where : {domainId: userDomain.domainId},
+            where : {domain_id: userDomain.domainId},
             lookup: {
                 from    : 'pages_meta',
                 let     : {id: '$_id'},
@@ -36,12 +36,12 @@ module.exports = async function (req, res) {
             // cant use this cz page_meta can be empty
             // unwind: '$meta'
             unwind: {
-                path: '$meta',
+                path                      : '$meta',
                 preserveNullAndEmptyArrays: true
             }
         },
         req
     );
     
-    return res.status(200).json(pagesResult);
+    return res.status(200).json({brokenLinks: pagesResult});
 };
