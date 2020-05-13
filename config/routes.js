@@ -19,9 +19,9 @@ module.exports.routes = {
     'GET /me'             : 'auth/me',
     'POST /update-profile': 'profile/update-profile',
     
-    'GET /projects'      : 'domain/index',
-    'POST /projects'     : 'domain/store',
-    'PATCH /projects/:id': 'domain/update',
+    'GET /projects'      : 'project/index',
+    'POST /projects'     : 'project/store',
+    'PATCH /projects/:id': 'project/update',
     
     
     'GET /projects/:id/amazon-products'  : 'amazon_product/products', // userdomain id

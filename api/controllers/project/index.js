@@ -8,6 +8,6 @@ module.exports = async function (req, res) {
     );
 
     return res.status(200).json({
-        userProject: userProject
+        userProjects: userProject
     });
 };
