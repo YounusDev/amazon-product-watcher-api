@@ -22,9 +22,9 @@ module.exports = async function (req, res) {
         prevDomainUseFor['amazon_products_check_service'] = {};
     }
     
-    let modifiedDomainUseFor = prevDomainUseFor;
+    let modifiedDomainUseFor                                            = prevDomainUseFor;
     modifiedDomainUseFor.amazon_products_check_service['affiliate_ids'] = affiliateIds;
-    modifiedDomainUseFor.amazon_products_check_service['status'] = status;
+    modifiedDomainUseFor.amazon_products_check_service['status']        = status;
     
     let updatedProjectService = await UserDomain.updateOne({
         userId: req.me.id,
@@ -35,6 +35,6 @@ module.exports = async function (req, res) {
         });
     
     return res.status(200).json({
-        project: updatedProjectService
+        project: commonHelpers.objectKeysToSnakeCase(updatedProjectService)
     });
 };
