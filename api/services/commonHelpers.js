@@ -30,7 +30,8 @@ module.exports.objectHasAnyValue = function (obj, omitEmpty = false, checkChild 
         }
     })
     
-    return {status     : found,
+    return {
+        status         : found,
         formattedObject: formattedObj
     }
 }
@@ -40,9 +41,14 @@ module.exports.objectKeysToSnakeCase = function (obj) {
     _.forEach(
         obj,
         (value, key) => {
-            if (_.isPlainObject(value) || _.isArray(value)) {
+            if (_.isPlainObject(value)) {
+                value = this.objectKeysToSnakeCase(value);
+            } else if (_.isArray(value) && value.length && _.isPlainObject(value[0])) {
+                // for now only supports [a, b]
+                // if [a: {}, b, c] it will break
                 value = this.objectKeysToSnakeCase(value);
             }
+            
             snakeCaseObject[_.snakeCase(key)] = value;
         }
     );

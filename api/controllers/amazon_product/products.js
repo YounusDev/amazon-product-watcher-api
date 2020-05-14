@@ -28,7 +28,7 @@ module.exports = async function (req, res) {
                                             {
                                                 $ne: [
                                                     {
-                                                        $type: '$domain_use_for.amazon_product_check_service'
+                                                        $type: '$domain_use_for.amazon_products_check_service'
                                                     },
                                                     'missing'
                                                 ]
@@ -36,7 +36,7 @@ module.exports = async function (req, res) {
                                             {
                                                 $in: [
                                                     '$$affiliate_id',
-                                                    '$domain_use_for.amazon_product_check_service.affiliate_ids'
+                                                    '$domain_use_for.amazon_products_check_service.affiliate_ids'
                                                 ]
                                             }
                                         ]

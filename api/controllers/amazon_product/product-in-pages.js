@@ -107,7 +107,7 @@ async function checkOwner(req, res) {
                             {
                                 $ne: [
                                     {
-                                        $type: '$domain_use_for.amazon_product_check_service'
+                                        $type: '$domain_use_for.amazon_products_check_service'
                                     },
                                     'missing'
                                 ]
@@ -115,7 +115,7 @@ async function checkOwner(req, res) {
                             {
                                 $in: [
                                     affiliateId,
-                                    '$domain_use_for.amazon_product_check_service.affiliate_ids',
+                                    '$domain_use_for.amazon_products_check_service.affiliate_ids',
                                 ]
                             }
                         ]
