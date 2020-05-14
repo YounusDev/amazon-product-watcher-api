@@ -2,10 +2,10 @@ module.exports = async function (req, res) {
     
     let usersDomainId = req.param('id');
     
-    let userDomain = commonHelpers.objectKeysToSnakeCase(await UserDomain.findOne({
+    let userDomain = await UserDomain.findOne({
         id    : usersDomainId,
         userId: req.me.id
-    }));
+    });
     
     if (!userDomain) {
         return res.status(404).json({message: 'invalid project id'});
