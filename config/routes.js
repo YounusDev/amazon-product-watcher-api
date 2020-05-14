@@ -9,7 +9,6 @@
  */
 
 module.exports.routes = {
-    
     'GET /': 'defaults/thanks',
     
     'POST /register': 'auth/register',
@@ -20,6 +19,7 @@ module.exports.routes = {
     'POST /update-profile': 'profile/update-profile',
     
     'GET /projects'      : 'project/index',
+    'GET /projects/:id'  : 'project/show',
     'POST /projects'     : 'project/store',
     'PATCH /projects/:id': 'project/update',
     
