@@ -13,6 +13,7 @@ module.exports = async function (req, res) {
     let email     = req.param('email');
     let firstName = req.param('first_name');
     let lastName  = req.param('last_name');
+    let address  = req.param('address');
     let password  = req.param('password');
 
     let checkUser = await User.findOne({
@@ -34,7 +35,8 @@ module.exports = async function (req, res) {
     let userMeta = await UserMeta.create({
         userId   : createdUser.id,
         firstName: firstName,
-        lastName : lastName
+        lastName : lastName,
+        address  : address
     }).fetch();
 
     delete createdUser.password;
