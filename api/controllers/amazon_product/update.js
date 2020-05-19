@@ -3,9 +3,6 @@ module.exports = async function (req, res) {
     let affiliateIds  = req.param('affiliate_ids');
     let status        = req.param('status');
     
-    console.log(affiliateIds)
-    console.log(status)
-    
     let userProject = await UserDomain.findOne({
         id    : userProjectId,
         userId: req.me.id
