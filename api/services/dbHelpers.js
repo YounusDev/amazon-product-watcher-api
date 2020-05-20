@@ -3,14 +3,18 @@ module.exports.get = async function (model, options = {}, req = null, limit = 1)
     let skip         = 0;
     let current_page = 1;
     
+    queryOptions.limit = !_.has(options, 'limit') ? limit : options.limit;
+    
     if (req) {
+        if (_.has(req.query, 'limit')) {
+            queryOptions.limit = parseInt(req.query.limit);
+        }
+        
         if (_.has(req.query, 'page')) {
-            skip         = (parseInt(req.query.page) - 1) * limit;
+            skip         = (parseInt(req.query.page) - 1) * queryOptions.limit;
             current_page = parseInt(req.query.page);
         }
     }
-    
-    if (!_.has(options, 'limit')) queryOptions.limit = limit;
     
     queryOptions = [
         {
@@ -20,7 +24,7 @@ module.exports.get = async function (model, options = {}, req = null, limit = 1)
                         $skip: skip
                     },
                     {
-                        $limit: !_.has(options, 'limit') ? limit : options.limit
+                        $limit: queryOptions.limit
                     }
                 ],
                 total_rows: [

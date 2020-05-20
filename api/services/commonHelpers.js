@@ -9,7 +9,7 @@ module.exports.objectHasAnyValue = function (obj, omitEmpty = false, checkChild 
             if (!only.length) {
                 if (!exclude.includes(objKey)) {
                     if (val) {
-                        found                = true
+                        found                = true;
                         formattedObj[objKey] = val;
                     } else {
                         if (!omitEmpty) formattedObj[objKey] = val;
@@ -28,19 +28,23 @@ module.exports.objectHasAnyValue = function (obj, omitEmpty = false, checkChild 
             // found = returnedObj.status;
             // formattedObj[objKey] = returnedObj.formattedObject
         }
-    })
+    });
     
     return {
         status         : found,
         formattedObject: formattedObj
-    }
-}
+    };
+};
 
 module.exports.objectKeysToSnakeCase = function (obj) {
-    let snakeCaseObject = {};
+    let snakeCaseObject = '';
+    if (_.isPlainObject(obj)) snakeCaseObject = {};
+    if (_.isArray(obj)) snakeCaseObject = [];
+    
     _.forEach(
         obj,
         (value, key) => {
+            // console.log(value)
             if (_.isPlainObject(value)) {
                 value = this.objectKeysToSnakeCase(value);
             } else if (_.isArray(value) && value.length && _.isPlainObject(value[0])) {

@@ -10,7 +10,7 @@ module.exports = {
             type: 'string',
             columnName: 'holding_url'
         },
-        guest_post_url   : {
+        guestPostUrl   : {
             type: 'string',
             columnName: 'guest_post_url'
         },
@@ -19,6 +19,10 @@ module.exports = {
             columnType: 'object',
             columnName: 'link_infos'
         }
+    },
+    
+    linksInGuestPostCollection() {
+        return LinkInGuestPost.getDatastore().manager.collection(LinkInGuestPost.tableName);
     },
     
     linkInGuestPostAggregated: async function (opts) {

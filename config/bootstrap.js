@@ -10,9 +10,9 @@
  */
 
 module.exports.bootstrap = async function () {
-
-    sails.JWT = require('jsonwebtoken');
-
+    sails.JWT      = require('jsonwebtoken');
+    sails.ObjectId = require('sails-mongo').mongodb.ObjectId;
+    
     // By convention, this is a good place to set up fake data during development.
     //
     // For example:
@@ -20,12 +20,18 @@ module.exports.bootstrap = async function () {
     if (await User.count() > 0) {
         return;
     }
-
+    
     let createdUsers = await User.createEach([
-        {email: 'john@example.com', password: await sails.helpers.passwords.hashPassword('123')},
-        {email: 'doe@example.com', password: await sails.helpers.passwords.hashPassword('123')}
+        {
+            email   : 'john@example.com',
+            password: await sails.helpers.passwords.hashPassword('123')
+        },
+        {
+            email   : 'doe@example.com',
+            password: await sails.helpers.passwords.hashPassword('123')
+        }
     ]).fetch();
-
+    
     await createdUsers.map(async (createdUser, index) => {
         await UserMeta.create({
             userId   : createdUser.id,
