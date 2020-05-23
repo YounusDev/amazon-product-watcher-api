@@ -5,7 +5,7 @@ module.exports = async function (req, res) {
     delete userWithMeta.password;
     delete userWithMeta.meta.userId;
 
-    return res.status(200).json(userWithMeta);
+    return res.status(200).json(commonHelpers.objectKeysToSnakeCase(userWithMeta));
 };
 
 

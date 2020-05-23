@@ -34,6 +34,6 @@ module.exports = async function (req, res) {
     delete userWithMeta.password;
 
     return res.status(200).json({
-        user: userWithMeta
+        user: commonHelpers.objectKeysToSnakeCase(userWithMeta)
     });
 };
