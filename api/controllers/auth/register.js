@@ -69,7 +69,7 @@ module.exports = async function (req, res) {
     createdUser.meta = userMeta;
 
     return res.status(200).json({
-        user       : createdUser,
+        user       : commonHelpers.objectKeysToSnakeCase(createdUser),
         bearerToken: bearerToken,
     });
 };

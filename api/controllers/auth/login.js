@@ -64,7 +64,7 @@ module.exports = async function (req, res) {
     );
 
     return res.json({
-        user       : userRecord, // send userWithUserMeta
+        user       : commonHelpers.objectKeysToSnakeCase(userRecord), // send userWithUserMeta
         bearerToken: bearerToken,
     }).status(200);
 };
