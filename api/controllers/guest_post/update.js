@@ -3,25 +3,25 @@ module.exports = async function (req, res) {
     let status        = req.param('status');
     let guestDomain   = req.param('guest_domain');
     let urls          = req.param('urls');
-    
+
     let userProject = await UserDomain.findOne({
         id    : userProjectId,
         userId: req.me.id
     });
-    
+
     if (!userProject) {
         return res.status(404).json({message: 'invalid project id'});
     }
-    
+
     let prevLinksInGuestPosts = commonHelpers.objectKeysToSnakeCase(await LinkInGuestPost.find({
         userDomainId: userProjectId
     }));
-    
+
     let forDelete = [];
-    
+
     prevLinksInGuestPosts.map((prevObj, key) => {
         let foundPrevObj = false;
-        
+
         urls.map((urlsObj, key) => {
             if (
                 prevObj.holding_url === urlsObj.holding_url
@@ -30,10 +30,10 @@ module.exports = async function (req, res) {
                 foundPrevObj = true;
             }
         });
-        
+
         if (!foundPrevObj) forDelete.push(prevObj.id);
     });
-    
+
     urls.map(async obj => {
         await LinkInGuestPost.linksInGuestPostCollection().updateOne(
             {
@@ -51,13 +51,13 @@ module.exports = async function (req, res) {
             {upsert: true}
         );
     });
-    
+
     forDelete.map(async item => {
         await LinkInGuestPost.linksInGuestPostCollection().deleteOne({_id: sails.ObjectId(item)});
     });
-    
+
     let guestDomainId = '';
-    
+
     let upsertedGuestDomain = await Domain.domainCollection().updateOne(
         {
             url: guestDomain
@@ -69,25 +69,25 @@ module.exports = async function (req, res) {
         },
         {upsert: true}
     );
-    
+
     if (upsertedGuestDomain.upsertedId) {
         guestDomainId = upsertedGuestDomain.upsertedId._id;
     } else {
         let domain    = await Domain.findOne({url: guestDomain});
         guestDomainId = domain.id;
     }
-    
+
     // it will try to preserve domain use for nested objects
     // cz updated one cant update only a single key of a nested object
     let prevDomainUseFor = _.cloneDeep(userProject.domainUseFor);
     if (!prevDomainUseFor.hasOwnProperty('guestPostsCheckService')) {
         prevDomainUseFor['guest_posts_check_service'] = {};
     }
-    
+
     let modifiedDomainUseFor                                          = prevDomainUseFor;
     modifiedDomainUseFor.guest_posts_check_service['status']          = status;
     modifiedDomainUseFor.guest_posts_check_service['guest_domain_id'] = guestDomainId;
-    
+
     let updatedProjectService = await UserDomain.updateOne({
         userId: req.me.id,
         id    : userProject.id
@@ -95,9 +95,9 @@ module.exports = async function (req, res) {
         .set({
             domainUseFor: modifiedDomainUseFor
         });
-    
+
     return res.status(200).json({
-        project: updatedProjectService
+        project: commonHelpers.objectKeysToSnakeCase(updatedProjectService)
     });
 };
 
