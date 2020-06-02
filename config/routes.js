@@ -18,6 +18,9 @@ module.exports.routes = {
     'GET /me'             : 'auth/me',
     'POST /update-profile': 'profile/update-profile',
 
+    'POST /check-password': 'password/check-password',
+    'POST /change-password': 'password/change-password',
+
     'GET /projects'      : 'project/index',
     'GET /projects/:id'  : 'project/show',
     'POST /projects'     : 'project/store',
