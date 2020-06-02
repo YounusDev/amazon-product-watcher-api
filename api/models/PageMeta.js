@@ -12,6 +12,14 @@ module.exports = {
         pageStatus: {
             type: 'string',
             columnName: 'page_status'
+        },
+        lhrDesktopResult: {
+            type: 'json',
+            columnName: 'lhr_desktop_result'
+        },
+        lhrMobileResult: {
+            type: 'json',
+            columnName: 'lhr_mobile_result'
         }
     }
 };

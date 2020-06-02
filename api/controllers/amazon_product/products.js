@@ -1,16 +1,16 @@
 module.exports = async function (req, res) {
-    
+
     let usersDomainId = req.param('id');
-    
+
     let userDomain = await UserDomain.findOne({
         id    : usersDomainId,
         userId: req.me.id
     });
-    
+
     if (!userDomain) {
         return res.status(404).json({message: 'invalid project id'});
     }
-    
+
     let amazonProducts = await dbHelpers.get(
         AmazonProductInPage.amazonProductsInPagesAggregated,
         {
@@ -25,6 +25,12 @@ module.exports = async function (req, res) {
                                 $match: {
                                     $expr: {
                                         $and: [
+                                            {
+                                                $eq: [
+                                                    '$user_id',
+                                                    req.me.id
+                                                ],
+                                            },
                                             {
                                                 $ne: [
                                                     {
@@ -58,7 +64,7 @@ module.exports = async function (req, res) {
                             ]
                         }
                     }
-                    
+
                 },
                 3: {
                     $lookup: {
@@ -116,7 +122,7 @@ module.exports = async function (req, res) {
         },
         req
     );
-    
+
     return res.status(200).json({amazonProducts: amazonProducts});
 };
 
