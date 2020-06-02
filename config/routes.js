@@ -35,5 +35,7 @@ module.exports.routes = {
     'GET /projects/:id/guest-posts'  : 'guest_post/index', // domain id
     'PATCH /projects/:id/guest-posts': 'guest_post/update',
 
+    'PATCH /projects/:id/pages-speed': 'page_speed/update',
+
     'PATCH /projects/:id/domain-uptime': 'domain_uptime/update'
 };
