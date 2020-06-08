@@ -16,10 +16,10 @@ module.exports.routes = {
     'GET /refresh'  : 'auth/refresh',
 
     'GET /me'             : 'auth/me',
-    'POST /update-profile': 'profile/update-profile',
+    'PATCH /update-profile': 'profile/update-profile',
 
     'POST /check-password' : 'password/check-password',
-    'POST /change-password': 'password/change-password',
+    'PATCH /change-password': 'password/change-password',
 
     'GET /projects'      : 'project/index',
     'GET /projects/:id'  : 'project/show',
