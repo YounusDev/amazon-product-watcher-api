@@ -6,6 +6,18 @@ module.exports = async function (req, res) {
     
     let domainUrl   = req.param('domain_url');
     let projectName = req.param('project_name');
+
+    try {
+        let parseDomainUrl = new URL(domainUrl);
+
+        if (!['http:', 'https:'].includes(parseDomainUrl.protocol)) {
+            return res.status(422).json({message: 'Domain protocol invalid'});
+        }
+
+        domainUrl = parseDomainUrl.protocol + '//' + parseDomainUrl.hostname;
+    } catch (e) {
+        return res.status(422).json({message: 'Domain url invalid'});
+    }
     
     let domainInfo = await Domain.findOne({
         url: domainUrl,
