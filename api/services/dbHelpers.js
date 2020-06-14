@@ -1,4 +1,4 @@
-module.exports.get = async function (model, options = {}, req = null, limit = 1) {
+module.exports.get = async function (model, options = {}, req = null, limit = 10) {
     let queryOptions = [];
     let skip         = 0;
     let current_page = 1;
