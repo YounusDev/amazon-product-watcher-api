@@ -63,7 +63,7 @@ module.exports = async function (req, res) {
             url: guestDomain
         },
         {
-            $set: {
+            $setOnInsert: {
                 url: guestDomain
             }
         },
