@@ -71,7 +71,7 @@ module.exports = async function (req, res) {
     );
 
     if (upsertedGuestDomain.upsertedId) {
-        guestDomainId = upsertedGuestDomain.upsertedId._id;
+        guestDomainId = upsertedGuestDomain.upsertedId._id.toString();
     } else {
         let domain    = await Domain.findOne({url: guestDomain});
         guestDomainId = domain.id;
