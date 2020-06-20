@@ -1,30 +1,34 @@
 module.exports = async function (req, res) {
-
     let usersDomainId = req.param('id');
 
     let userDomain = await UserDomain.findOne({
-        id    : usersDomainId,
+        id: usersDomainId,
         userId: req.me.id
     });
 
     if (!userDomain) {
-        return res.status(404).json({message: 'invalid project id'});
+        return res.status(404).json({ message: 'invalid project id' });
     }
 
     let amazonProducts = await dbHelpers.get(
         AmazonProductInPage.amazonProductsInPagesAggregated,
         {
             bothStageQuery: {
-                0: {$match: {}},
+                0: { $match: {} },
                 1: {
                     $lookup: {
-                        from    : 'users_domains',
-                        let     : {affiliate_id: '$affiliate_id'},
+                        from: 'users_domains',
                         pipeline: [
                             {
                                 $match: {
                                     $expr: {
                                         $and: [
+                                            {
+                                                $eq: [
+                                                    { $toString: '$_id' },
+                                                    usersDomainId
+                                                ]
+                                            },
                                             {
                                                 $eq: [
                                                     '$user_id',
@@ -39,52 +43,37 @@ module.exports = async function (req, res) {
                                                     'missing'
                                                 ]
                                             },
-                                            {
-                                                $in: [
-                                                    '$$affiliate_id',
-                                                    '$domain_use_for.amazon_products_check_service.affiliate_ids'
-                                                ]
-                                            }
                                         ]
                                     }
                                 }
                             }
                         ],
-                        as      : 'user_domain'
+                        as: 'user_domain'
                     }
                 },
                 2: {
-                    $match: {
-                        $expr: {
-                            $gt: [
-                                {
-                                    $size: '$user_domain'
-                                },
-                                0
-                            ]
-                        }
-                    }
-
+                    $unwind: '$user_domain'
                 },
-                3: {
+                3: { $match: { $expr: { $eq: ['$user_domain_id', usersDomainId] } } },
+                4: {
                     $lookup: {
-                        from    : 'amazon_products',
-                        let     : {product_id: '$product_id'},
+                        from: 'amazon_products',
+                        let: { product_id: '$product_id' },
                         pipeline: [
                             {
                                 $match: {
                                     $expr: {
                                         $eq: [
                                             '$$product_id',
-                                            {$toString: '$_id'}
+                                            { $toString: '$_id' }
                                         ]
                                     }
                                 },
                             },
                             {
                                 $lookup: {
-                                    from    : 'amazon_products_meta',
-                                    let     : {product_id: {$toString: '$_id'}},
+                                    from: 'amazon_products_meta',
+                                    let: { product_id: { $toString: '$_id' } },
                                     pipeline: [
                                         {
                                             $match: {
@@ -97,23 +86,23 @@ module.exports = async function (req, res) {
                                             }
                                         }
                                     ],
-                                    as      : 'meta'
+                                    as: 'meta'
                                 },
                             },
                             {
                                 $unwind: {
-                                    path                      : '$meta',
+                                    path: '$meta',
                                     preserveNullAndEmptyArrays: true
                                 }
                             }
                         ],
-                        as      : 'product',
+                        as: 'product',
                     }
                 },
-                4: {
+                5: {
                     $unwind: '$product'
                 },
-                5: {
+                6: {
                     $project: {
                         user_domain: 0
                     }
@@ -123,6 +112,6 @@ module.exports = async function (req, res) {
         req
     );
 
-    return res.status(200).json({amazonProducts: amazonProducts});
+    return res.status(200).json({ amazonProducts: amazonProducts });
 };
 
