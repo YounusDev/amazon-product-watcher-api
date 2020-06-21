@@ -1,9 +1,10 @@
 module.exports = async function (req, res) {
-    if (!await checkOwner(req, res)) return res.status(404).json({message: 'invalid affiliate_id'});
-    
+    let ownerInfo = checkOwner(req, res);
+
+    if (!(!!ownerInfo)) return res.status(404).json({ message: 'invalid project id' });
+
     let productId = req.param('id');
-    let affiliateId = req.query.affiliate_id;
-    
+
     let productsInPages = await dbHelpers.get(
         AmazonProductInPage.amazonProductsInPagesAggregated,
         {
@@ -11,26 +12,26 @@ module.exports = async function (req, res) {
                 0: {
                     $match: {
                         product_id: productId,
-                        affiliate_id: affiliateId
+                        user_domain_id: ownerInfo.user_id
                     }
                 },
                 3: {
                     $lookup: {
-                        from    : 'pages',
-                        let     : {page_id: '$page_id'},
+                        from: 'pages',
+                        let: { page_id: '$page_id' },
                         pipeline: [
                             {
                                 $match: {
                                     $expr: {
                                         $eq: [
                                             '$$page_id',
-                                            {$toString: '$_id'}
+                                            { $toString: '$_id' }
                                         ]
                                     }
                                 },
                             }
                         ],
-                        as      : 'page',
+                        as: 'page',
                     }
                 },
                 4: {
@@ -40,21 +41,15 @@ module.exports = async function (req, res) {
         },
         req
     );
-    
-    return res.status(200).json({productsInPages: productsInPages});
+
+    return res.status(200).json({ productsInPages: productsInPages });
 };
 
 
 //check owner of product
 async function checkOwner(req, res) {
-    let affiliateId = '';
-    
-    if (_.has(req.query, 'affiliate_id')) {
-        affiliateId = req.query.affiliate_id;
-    } else {
-        return false;
-    }
-    
+    let projectId = req.query.project_id;
+
     let userDomain = await dbHelpers.getSingle(
         UserDomain.userDomainAggregated,
         [
@@ -62,6 +57,12 @@ async function checkOwner(req, res) {
                 $match: {
                     $expr: {
                         $and: [
+                            {
+                                $eq: [
+                                    { $toString: '$_id' },
+                                    projectId
+                                ]
+                            },
                             {
                                 $eq: [
                                     '$user_id',
@@ -75,12 +76,6 @@ async function checkOwner(req, res) {
                                     },
                                     'missing'
                                 ]
-                            },
-                            {
-                                $in: [
-                                    affiliateId,
-                                    '$domain_use_for.amazon_products_check_service.affiliate_ids',
-                                ]
                             }
                         ]
                     }
@@ -88,6 +83,6 @@ async function checkOwner(req, res) {
             }
         ]
     );
-    
-    return !!userDomain;
+
+    return userDomain;
 }
