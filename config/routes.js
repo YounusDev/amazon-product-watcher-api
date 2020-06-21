@@ -42,5 +42,7 @@ module.exports.routes = {
     'PATCH /projects/:id/pages-speed': 'page_speed/update',
 
     'GET /projects/:id/domain-uptime'  : 'domain_uptime/show',
-    'PATCH /projects/:id/domain-uptime': 'domain_uptime/update'
+    'PATCH /projects/:id/domain-uptime': 'domain_uptime/update',
+
+    'GET /service-logs' : 'service_log/index'
 };
