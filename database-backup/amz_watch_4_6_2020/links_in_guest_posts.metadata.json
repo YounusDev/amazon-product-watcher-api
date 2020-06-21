@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"amz_watch.links_in_guest_posts"}],"uuid":"1611632a40e144b891434693158998a2"}
