@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"amz_watch.users_domains"}],"uuid":"9a7ff9cb1d32426ca5f2797f25c42549"}
