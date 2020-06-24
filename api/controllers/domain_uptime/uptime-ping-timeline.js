@@ -1,6 +1,6 @@
 module.exports = async function (req, res) {
     let usersDomainId = req.param('id');
-    let time_upto = parseInt(req.param('time_upto'));
+    let time_upto = req.param('time_upto') ? parseInt(req.param('time_upto')) : 0;
     let interval = req.param('interval') || 'min';
 
     let userDomain = await UserDomain.findOne({
@@ -12,7 +12,12 @@ module.exports = async function (req, res) {
         return res.status(404).json({ message: 'invalid project id' });
     }
 
-    time_upto = time_upto < (new Date().getTime() - (86400 * 1000)) ? (new Date().getTime() - (86400 * 1000)) : time_upto;
+    // finally convert to millisecond
+    let monthTimeInSecond = 60 * 60 * 24 * 30 * 1000;
+    let oneDayTimeInSecond = 60 * 60 * 24 * 1000;
+
+    time_upto = time_upto < oneDayTimeInSecond ? oneDayTimeInSecond : time_upto;
+    time_upto = time_upto > monthTimeInSecond ? monthTimeInSecond : time_upto;
 
     let domainUptimePingTimeline = await dbHelpers.get(
         ServiceLog.serviceLogAggregated,
@@ -23,11 +28,11 @@ module.exports = async function (req, res) {
                         domain_id: userDomain.domainId,
                         service_type: 'uptime',
                         child_service_type: 'ping',
-                        // $expr: {
-                        //     $gt: [
-                        //         '$logged_at', time_upto
-                        //     ]
-                        // }
+                        $expr: {
+                            $gt: [
+                                '$logged_at', time_upto
+                            ]
+                        }
                     }
                 },
                 1: {
@@ -95,21 +100,30 @@ module.exports = async function (req, res) {
                     }
                 },
                 4: {
-                    $group: {
-                        _id: {
-                            month: { $month: { $convert: { input: '$logged_at', to: 'date' } } },
-                            day: { $dayOfMonth: { $convert: { input: '$logged_at', to: 'date' } } },
-                            hour: { $hour: { $convert: { input: '$logged_at', to: 'date' } } },
-                        },
-                        logs: { $push: '$$ROOT' },
-                    }
+                    $sort: { logged_at: -1 }
                 },
-                5: {
-                    $group: {
-                        _id: '$_id.hour',
-                        logs: { $push: '$$ROOT' }
-                    }
-                }
+                // 5: {
+                //     $group: {
+                //         _id: {
+                //             month: { $month: { $convert: { input: '$logged_at', to: 'date' } } },
+                //             day: { $dayOfMonth: { $convert: { input: '$logged_at', to: 'date' } } },
+                //             hour: { $hour: { $convert: { input: '$logged_at', to: 'date' } } },
+                //         },
+                //         logs: { $push: '$$ROOT' },
+                //     }
+                // },
+                // 6: {
+                //     $group: {
+                //         _id: '$_id.hour',
+                //         logs: { $push: '$$ROOT' }
+                //     }
+                // },
+                // 7: {
+                //     $addFields: { id_type: 'hour' }
+                // },
+                // 8: {
+                //     $sort: { id: -1 }
+                // }
             }
         },
         req,
