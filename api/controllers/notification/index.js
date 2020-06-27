@@ -10,9 +10,9 @@ module.exports = async function (req, res) {
                     $match: {
                         $expr: {
                             $and: [
-                                // {
-                                //     $ne: ['$status', 'ok']
-                                // },
+                                {
+                                    $ne: ['$status', 'ok']
+                                },
                                 {
                                     $gt: [
                                         '$logged_at', monthTimeInSecond
