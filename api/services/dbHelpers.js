@@ -1,6 +1,6 @@
 module.exports.get = async function (model, options = {}, req = null, limit = 10) {
     let queryOptions = [];
-    let skip         = 0;
+    let skip = 0;
     let current_page = 1;
 
     queryOptions.limit = !_.has(options, 'limit') ? limit : options.limit;
@@ -11,7 +11,7 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
         }
 
         if (_.has(req.query, 'page')) {
-            skip         = (parseInt(req.query.page) - 1) * queryOptions.limit;
+            skip = (parseInt(req.query.page) - 1) * queryOptions.limit;
             current_page = parseInt(req.query.page);
         }
     }
@@ -19,7 +19,7 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
     queryOptions = [
         {
             $facet: {
-                data      : [
+                data: [
                     {
                         $skip: skip
                     },
@@ -28,21 +28,21 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
                     }
                 ],
                 total_rows: [
-                    {$count: 'count'}
+                    { $count: 'count' }
                 ]
             }
         },
         {
             $project: {
-                data           : 1,
+                data: 1,
                 pagination_meta: {
-                    total       : {
+                    total: {
                         $arrayElemAt: [
                             '$total_rows.count',
                             0
                         ]
                     },
-                    current_page: {$literal: current_page}
+                    current_page: { $literal: current_page }
                 }
             }
         }
@@ -50,8 +50,8 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
 
     if (!_.hasIn(options, 'pageStageQuery') && !_.hasIn(options, 'dataStageQuery') && !_.hasIn(options, 'bothStageQuery')) {
         let originalMatchQuery = !_.has(options, 'where') ? _.cloneDeep(options) : _.cloneDeep(options.where);
-        let lookupQuery        = !_.has(options, 'lookup') ? null : _.cloneDeep(options.lookup);
-        let unwindQuery        = !_.has(options, 'lookup') ? null : _.cloneDeep(options.unwind);
+        let lookupQuery = !_.has(options, 'lookup') ? null : _.cloneDeep(options.lookup);
+        let unwindQuery = !_.has(options, 'lookup') ? null : _.cloneDeep(options.unwind);
 
         let finalMatchQuery = {};
 
@@ -59,17 +59,17 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
             finalMatchQuery[_.snakeCase(key)] = originalMatchQuery[key];
         });
 
-        queryOptions.splice(0, 0, {$match: finalMatchQuery});
-        queryOptions[1].$facet.data.splice(0, 0, {$match: finalMatchQuery});
+        queryOptions.splice(0, 0, { $match: finalMatchQuery });
+        queryOptions[1].$facet.data.splice(0, 0, { $match: finalMatchQuery });
 
         if (lookupQuery) {
             // push lookup query at 2nd position
-            queryOptions[1].$facet.data.splice(1, 0, {$lookup: lookupQuery});
+            queryOptions[1].$facet.data.splice(1, 0, { $lookup: lookupQuery });
         }
         if (unwindQuery) {
             // push lookup query at 3rd position
             // its now only for getting single single item. dont use unwind if you has more than 1 elm for now
-            queryOptions[1].$facet.data.splice(2, 0, {$unwind: unwindQuery});
+            queryOptions[1].$facet.data.splice(2, 0, { $unwind: unwindQuery });
         }
     } else {
         Object.keys(options.bothStageQuery).map((key, index) => {
@@ -92,9 +92,9 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
 
     if (result && _.hasIn(result, 'pagination_meta')) {
         let paginationMeta = result.pagination_meta;
-        let last_page      = Math.ceil(parseInt(paginationMeta.total) / limit);
+        let last_page = Math.ceil(parseInt(paginationMeta.total) / queryOptions.limit);
 
-        paginationMeta.last_page = last_page || 0;
+        paginationMeta.last_page = last_page || 1;
     }
 
     if (result && !_.hasIn(result.pagination_meta, 'total')) result.pagination_meta.total = 0;

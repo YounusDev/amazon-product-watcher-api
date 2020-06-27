@@ -26,7 +26,6 @@ module.exports.routes = {
     'POST /projects': 'project/store',
     'PATCH /projects/:id': 'project/update',
 
-
     'GET /projects/:id/amazon-products': 'amazon_product/products', // userdomain id
     'PATCH /projects/:id/amazon-products': 'amazon_product/update',
 
@@ -45,5 +44,7 @@ module.exports.routes = {
     'GET /projects/:id/domain-uptime-logs': 'domain_uptime/uptime-logs',
     'GET /projects/:id/domain-uptime-ping-timeline': 'domain_uptime/uptime-ping-timeline',
     'GET /projects/:id/domain-uptime-latest-downtime': 'domain_uptime/uptime-latest-downtime',
-    'PATCH /projects/:id/domain-uptime': 'domain_uptime/update'
+    'PATCH /projects/:id/domain-uptime': 'domain_uptime/update',
+
+    'GET /notifications': 'notification/index'
 };
