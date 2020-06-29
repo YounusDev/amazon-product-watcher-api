@@ -46,5 +46,9 @@ module.exports.routes = {
     'GET /projects/:id/domain-uptime-latest-downtime': 'domain_uptime/uptime-latest-downtime',
     'PATCH /projects/:id/domain-uptime': 'domain_uptime/update',
 
-    'GET /notifications': 'notification/index'
+    'GET /notifications': 'notification/index',
+
+    'GET /projects-count': 'count/project',
+    'GET /pages-count': 'count/page',
+    'GET /products-count': 'count/product',
 };

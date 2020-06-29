@@ -2,8 +2,8 @@ module.exports = {
     tableName: 'pages',
 
     attributes: {
-        domainId   : {
-            type   : 'string',
+        domainId: {
+            type: 'string',
             columnName: 'domain_id'
         },
         url: {

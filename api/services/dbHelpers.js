@@ -2,6 +2,7 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
     let queryOptions = [];
     let skip = 0;
     let current_page = 1;
+    let finalLimit = 10;
 
     queryOptions.limit = !_.has(options, 'limit') ? limit : options.limit;
 
@@ -15,6 +16,8 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
             current_page = parseInt(req.query.page);
         }
     }
+
+    finalLimit = queryOptions.limit;
 
     queryOptions = [
         {
@@ -92,7 +95,8 @@ module.exports.get = async function (model, options = {}, req = null, limit = 10
 
     if (result && _.hasIn(result, 'pagination_meta')) {
         let paginationMeta = result.pagination_meta;
-        let last_page = Math.ceil(parseInt(paginationMeta.total) / queryOptions.limit);
+
+        let last_page = Math.ceil(parseInt(paginationMeta.total) / finalLimit);
 
         paginationMeta.last_page = last_page || 1;
     }

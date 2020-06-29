@@ -2,20 +2,20 @@ module.exports = {
     tableName: 'users_domains',
 
     attributes: {
-        projectName  : {
-            type    : 'string',
+        projectName: {
+            type: 'string',
             columnName: 'project_name'
         },
-        domainId     : {
-            type   : 'string',
+        domainId: {
+            type: 'string',
             columnName: 'domain_id'
         },
-        userId       : {
-            type   : 'string',
+        userId: {
+            type: 'string',
             columnName: 'user_id'
         },
-        domainUseFor : {
-            type    : 'json',
+        domainUseFor: {
+            type: 'json',
             columnName: 'domain_use_for'
         },
         deactivatedAt: {
@@ -23,13 +23,13 @@ module.exports = {
             columnName: 'deactivated_at'
         }
     },
-    
+
     userDomainAggregated: async function (opts) {
         let users_domains_collection = UserDomain.getDatastore().manager.collection(UserDomain.tableName);
-    
+
         let userDomains = await users_domains_collection.aggregate(opts)
             .toArray();
-    
+
         return userDomains[0];
     },
 
@@ -42,7 +42,7 @@ module.exports = {
 
         userDomains[0].data = await Promise.all(userDomains[0].data.map(async userDomain => {
             userDomain.domain = await Domain.withMeta({
-                where: {id: userDomain.domain_id}
+                where: { id: userDomain.domain_id }
             });
 
             return userDomain;
@@ -60,7 +60,7 @@ module.exports = {
 
         userDomains = Promise.all(userDomains.map(async userDomain => {
 
-            userDomain.domain = await Domain.withMeta({id: userDomain.domainId});
+            userDomain.domain = await Domain.withMeta({ id: userDomain.domainId });
 
             return userDomain;
         }));
