@@ -22,5 +22,6 @@ module.exports.policies = {
     'auth/login': true,
     'auth/register': true,
     'auth/refresh': true,
-
+    'password/forgot-password': true,
+    'password/reset-password': true,
 };

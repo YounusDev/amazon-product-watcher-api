@@ -10,6 +10,12 @@ module.exports = {
                 type: 'string',
                 protect: true
             },
+            token: {
+                type: 'string'
+            },
+            token_expired: {
+                type: 'string'
+            },
             validated: {
                 type: 'string',
                 defaultsTo: 'active'

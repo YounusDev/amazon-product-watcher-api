@@ -20,6 +20,8 @@ module.exports.routes = {
 
     'POST /check-password': 'password/check-password',
     'PATCH /change-password': 'password/change-password',
+    'POST /forgot-password': 'password/forgot-password',
+    'PATCH /password/reset/:token': 'password/reset-password',
 
     'GET /projects': 'project/index',
     'GET /projects/:id': 'project/show',
