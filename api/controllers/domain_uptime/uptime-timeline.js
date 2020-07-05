@@ -1,7 +1,8 @@
 module.exports = async function (req, res) {
     let usersDomainId = req.param('id');
-    let time_upto = req.param('time_upto') ? parseInt(req.param('time_upto')) : 0;
-    let interval = req.param('interval') || 'min';
+    let logType = req.param('log_type') || 'ping';
+    // let time_upto = req.param('time_upto') ? parseInt(req.param('time_upto')) : 0;
+    // let interval = req.param('interval') || 'min';
 
     let userDomain = await UserDomain.findOne({
         id: usersDomainId,
@@ -13,13 +14,11 @@ module.exports = async function (req, res) {
     }
 
     // finally convert to millisecond
-    let monthTimeInSecond = 60 * 60 * 24 * 30 * 1000;
-    let oneDayTimeInSecond = 60 * 60 * 24 * 1000;
+    let monthTimeInMilSecond = 60 * 60 * 24 * 30 * 1000;
 
-    time_upto = time_upto < oneDayTimeInSecond ? oneDayTimeInSecond : time_upto;
-    time_upto = time_upto > monthTimeInSecond ? monthTimeInSecond : time_upto;
+    let time_from = (new Date().getTime() - monthTimeInMilSecond);
 
-    let domainUptimePingTimeline = await dbHelpers.get(
+    let domainUptimeTimeline = await dbHelpers.get(
         ServiceLog.serviceLogAggregated,
         {
             bothStageQuery: {
@@ -27,10 +26,10 @@ module.exports = async function (req, res) {
                     $match: {
                         domain_id: userDomain.domainId,
                         service_type: 'uptime',
-                        child_service_type: 'ping',
+                        child_service_type: logType,
                         $expr: {
                             $gt: [
-                                '$logged_at', time_upto
+                                '$logged_at', time_from
                             ]
                         }
                     }
@@ -127,9 +126,9 @@ module.exports = async function (req, res) {
             }
         },
         req,
-        9999
+        50000
     );
 
-    return res.status(200).json({ domainUptimePingTimeline: domainUptimePingTimeline });
+    return res.status(200).json({ domainUptimeTimeline: domainUptimeTimeline });
 };
 

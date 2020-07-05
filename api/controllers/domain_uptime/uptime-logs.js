@@ -1,6 +1,6 @@
 module.exports = async function (req, res) {
     let usersDomainId = req.param('id');
-    let logType = req.param('log_type') || 'ping'
+    let logType = req.param('log_type') || 'ping';
 
     let userDomain = await UserDomain.findOne({
         id: usersDomainId,

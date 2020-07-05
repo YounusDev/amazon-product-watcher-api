@@ -42,7 +42,7 @@ module.exports.routes = {
 
     'GET /projects/:id/domain-uptime': 'domain_uptime/show',
     'GET /projects/:id/domain-uptime-logs': 'domain_uptime/uptime-logs',
-    'GET /projects/:id/domain-uptime-ping-timeline': 'domain_uptime/uptime-ping-timeline',
+    'GET /projects/:id/domain-uptime-timeline': 'domain_uptime/uptime-timeline',
     'GET /projects/:id/domain-uptime-latest-downtime': 'domain_uptime/uptime-latest-downtime',
     'PATCH /projects/:id/domain-uptime': 'domain_uptime/update',
 
