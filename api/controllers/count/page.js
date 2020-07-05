@@ -1,5 +1,5 @@
 module.exports = async function (req, res) {
-    let projectsCount = await dbHelpers.getSingle(
+    let pagesCount = await dbHelpers.getSingle(
         Page.pageAggregated,
         [
             {
@@ -76,6 +76,6 @@ module.exports = async function (req, res) {
         req
     );
 
-    return res.status(200).json({ projectsCount: projectsCount });
+    return res.status(200).json({ pagesCount: pagesCount });
 };
 
