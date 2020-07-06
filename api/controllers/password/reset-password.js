@@ -10,17 +10,24 @@ module.exports = async function (req, res) {
     let token = req.param('token');
     let password = req.param('password');
 
-    let userInfo = await User.findOne({
+    let userEmail = await User.findOne({
         email: email,
+    });
+
+    if (!userEmail){
+        return res.status(404).json({message: 'email does not match'});
+    }
+
+    let userToken = await User.findOne({
         token: token
     });
 
-    if (!userInfo){
-        return res.status(404).json({message: 'email or token does not match'});
+    if (!userToken){
+        return res.status(404).json({message: 'token is invalid'});
     }
 
     //check token expire time
-    if (Date.now() > userInfo.token_expired){
+    if (Date.now() > userEmail.token_expired){
         return res.status(404).json({message: 'your token has been expired'});
     }
 
