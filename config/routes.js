@@ -51,9 +51,9 @@ module.exports.routes = {
     'GET /notifications': 'notification/index',
 
     'GET /latest-issues': 'notification/latest-issues',
-    'GET /latest-scrapped-pages': 'notification/latest-scrapped-pages',
+    'GET /latest-scraped-pages': 'notification/latest-scraped-pages',
     'GET /latest-parsed-pages': 'notification/latest-parsed-pages',
-    'GET /latest-scrapped-products': 'notification/latest-scrapped-products',
+    'GET /latest-scraped-products': 'notification/latest-scraped-products',
     'GET /latest-parsed-products': 'notification/latest-parsed-products',
 
     'GET /projects-count': 'count/project',

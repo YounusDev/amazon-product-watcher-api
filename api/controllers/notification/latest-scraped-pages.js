@@ -1,5 +1,5 @@
 module.exports = async function (req, res) {
-    let latestScrappedPages = await dbHelpers.get(
+    let latestScrapedPages = await dbHelpers.get(
         Page.pageAggregated,
         {
             bothStageQuery: {
@@ -41,7 +41,7 @@ module.exports = async function (req, res) {
                 },
                 3: { $unwind: '$user_domain' },
                 4: {
-                    $sort: { 'updated_at.last_scrapped_at': -1 }
+                    $sort: { 'updated_at.last_scraped_at': -1 }
                 },
                 5: {
                     $limit: 5
@@ -51,6 +51,6 @@ module.exports = async function (req, res) {
         req
     );
 
-    return res.status(200).json({ latestScrappedPages: latestScrappedPages });
+    return res.status(200).json({ latestScrapedPages: latestScrapedPages });
 };
 

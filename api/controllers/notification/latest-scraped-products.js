@@ -1,5 +1,5 @@
 module.exports = async function (req, res) {
-    let latestScrappedProducts = await dbHelpers.get(
+    let latestScrapedProducts = await dbHelpers.get(
         AmazonProductInPage.amazonProductsInPagesAggregated,
         {
             bothStageQuery: {
@@ -61,9 +61,14 @@ module.exports = async function (req, res) {
                     $unwind: '$product'
                 },
                 6: {
-                    $sort: { 'updated_at.last_scrapped_at': -1 }
+                    $project: {
+                        'user_domain.domain_use_for': 0
+                    }
                 },
                 7: {
+                    $sort: { 'product.updated_at.last_scraped_at': -1 }
+                },
+                8: {
                     $limit: 5
                 }
             }
@@ -71,6 +76,6 @@ module.exports = async function (req, res) {
         req
     );
 
-    return res.status(200).json({ latestScrappedProducts: latestScrappedProducts });
+    return res.status(200).json({ latestScrapedProducts: latestScrapedProducts });
 };
 

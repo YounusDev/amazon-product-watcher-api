@@ -46,7 +46,8 @@ module.exports = async function (req, res) {
                 2: { $unwind: '$user_domain' },
                 3: {
                     $project: {
-                        seen_by: 0
+                        seen_by: 0,
+                        'user_domain.domain_use_for': 0
                     }
                 },
                 4: {

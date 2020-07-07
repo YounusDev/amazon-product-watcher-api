@@ -104,7 +104,8 @@ module.exports = async function (req, res) {
                 },
                 6: {
                     $project: {
-                        user_domain: 0
+                        user_domain: 0,
+                        'product.meta.compressed_content': 0
                     }
                 }
             }
