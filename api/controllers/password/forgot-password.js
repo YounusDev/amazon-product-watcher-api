@@ -26,6 +26,7 @@ module.exports = async function (req, res) {
         });
 
     //send email
+    await emails.passwordRecovery(userInfo.email, resetUrl);
 
     return res.status(200).json({
         send_reset_link: true,

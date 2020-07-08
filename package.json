@@ -13,6 +13,7 @@
     "grunt": "1.0.4",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "nodemailer": "^6.4.10",
     "sails": "^1.2.3",
     "sails-hook-grunt": "^4.0.0",
     "sails-hook-organics": "^1.1.0",
