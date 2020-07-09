@@ -19,7 +19,7 @@ module.exports = async function (req, res) {
     }
 
     let userToken = await User.findOne({
-        token: token
+        forgot_password_token: token
     });
 
     if (!userToken){
@@ -27,18 +27,18 @@ module.exports = async function (req, res) {
     }
 
     //check token expire time
-    if (Date.now() > userEmail.token_expired){
+    if (Date.now() > userEmail.forgot_password_token_expired){
         return res.status(404).json({message: 'your token has been expired'});
     }
 
     //reset password and token null for the user
     await User.updateOne({
         email: email,
-        token: token
+        forgot_password_token: token
     }).set({
         password: await sails.helpers.passwords.hashPassword(password),
-        token: '',
-        token_expired: ''
+        forgot_password_token: '',
+        forgot_password_token_expired: ''
     });
 
     return res.status(200).json({

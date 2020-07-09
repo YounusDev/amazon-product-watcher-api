@@ -15,17 +15,17 @@ module.exports = async function (req, res) {
         return res.status(404).json({message: 'we can\'t find a user with that e-mail address'});
     }
 
-    let token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
-        resetUrl = req.param('reset_url')+'/'+token;
+    let token = commonHelpers.getCustomToken();
 
     //set token for the user
     await User.updateOne({email: email})
         .set({
-            token: token,
-            token_expired: Date.now()+sails.config.custom.resetPasswordLinkExpireTime
+            forgot_password_token: token,
+            forgot_password_token_expired: Date.now()+sails.config.custom.resetPasswordLinkExpireTime
         });
 
     //send email
+    let resetUrl = req.param('reset_url')+'/'+token;
     await emails.passwordRecovery(userInfo.email, resetUrl);
 
     return res.status(200).json({
