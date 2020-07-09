@@ -20,8 +20,8 @@ module.exports = async function (req, res) {
     //set token for the user
     await User.updateOne({email: email})
         .set({
-            forgot_password_token: token,
-            forgot_password_token_expired: Date.now()+sails.config.custom.resetPasswordLinkExpireTime
+            forgotPasswordToken: token,
+            forgotPasswordTokenExpired: Date.now()+sails.config.custom.resetPasswordLinkExpireTime
         });
 
     //send email
