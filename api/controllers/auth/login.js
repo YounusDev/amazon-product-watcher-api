@@ -26,6 +26,13 @@ module.exports = async function (req, res) {
         return res.status(404).json({message: 'email or password does not match'});
     }
 
+    //check user status
+    /*if (userRecord.verifyStatus !== 1){
+        return res.json({
+            unverified : true
+        }).status(200);
+    }*/
+
     delete userRecord.password;
 
     let appSecret       = sails.config.custom.appSecret;

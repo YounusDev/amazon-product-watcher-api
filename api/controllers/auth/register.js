@@ -7,13 +7,14 @@ module.exports = async function (req, res) {
         'email'     : 'required|email',
         'first_name': 'required',
         'last_name' : 'required',
-        'password'  : 'required|confirmed'
+        'password'  : 'required|confirmed',
+        'verify_url' : 'required'
     })) return;
 
     let email     = req.param('email');
     let firstName = req.param('first_name');
     let lastName  = req.param('last_name');
-    let address  = req.param('address');
+    let address   = req.param('address');
     let password  = req.param('password');
 
     let checkUser = await User.findOne({
@@ -26,10 +27,14 @@ module.exports = async function (req, res) {
         });
     }
 
+    let token = commonHelpers.getCustomToken();
+
     let createdUser = await User.create({
-        email    : email,
-        password : await sails.helpers.passwords.hashPassword(password),
-        validated: true
+        email        : email,
+        password     : await sails.helpers.passwords.hashPassword(password),
+        validated    : true,
+        verifyStatus : 0,
+        verifyToken  : token
     }).fetch();
 
     let userMeta = await UserMeta.create({
@@ -39,9 +44,9 @@ module.exports = async function (req, res) {
         address  : address
     }).fetch();
 
-    delete createdUser.password;
+    //delete createdUser.password;
 
-    let appSecret      = sails.config.custom.appSecret;
+    /*let appSecret      = sails.config.custom.appSecret;
     let jwtTime        = sails.config.custom.jwtTime;
     let jwtRefreshTime = sails.config.custom.jwtRefreshTime;
 
@@ -66,10 +71,15 @@ module.exports = async function (req, res) {
 
     res.cookie('refreshToken', refreshToken, {maxAge: jwtRefreshTime, httpOnly: true, signed: true});
 
-    createdUser.meta = userMeta;
+    createdUser.meta = userMeta;*/
+
+    //send verification email
+    let verifyUrl = req.param('verify_url')+'/'+token;
+    await emails.accountVerification(createdUser.email, verifyUrl);
 
     return res.status(200).json({
-        user       : commonHelpers.objectKeysToSnakeCase(createdUser),
-        bearerToken: bearerToken,
+        //user       : commonHelpers.objectKeysToSnakeCase(createdUser),
+        //bearerToken: bearerToken,
+        registration: true
     });
 };
