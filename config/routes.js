@@ -23,6 +23,8 @@ module.exports.routes = {
     'POST /forgot-password': 'password/forgot-password',
     'PATCH /reset-password/:token': 'password/reset-password',
 
+    'POST /resend-verify-email': 'auth/resend-verify-email',
+
     'GET /projects': 'project/index',
     'GET /projects/:id': 'project/show',
     'POST /projects': 'project/store',

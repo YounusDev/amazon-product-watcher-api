@@ -10,11 +10,21 @@ module.exports = {
                 type: 'string',
                 protect: true
             },
-            token: {
-                type: 'string'
+            forgotPasswordToken: {
+                type: 'string',
+                columnName: 'forgot_password_token'
             },
-            token_expired: {
-                type: 'string'
+            forgotPasswordTokenExpired: {
+                type: 'string',
+                columnName: 'forgot_password_token_expired'
+            },
+            verifyStatus: {
+                type: 'string',
+                columnName: 'verify_status'
+            },
+            verifyToken: {
+                type: 'string',
+                columnName: 'verify_token'
             },
             validated: {
                 type: 'string',
