@@ -1,6 +1,7 @@
 module.exports = async function (req, res) {
     let usersDomainId = req.param('id');
     let logType = req.param('log_type') || 'ping';
+    let filterExpr = req.param('f');
 
     let userDomain = await UserDomain.findOne({
         id: usersDomainId,
@@ -11,15 +12,27 @@ module.exports = async function (req, res) {
         return res.status(404).json({ message: 'invalid project id' });
     }
 
+    let queryAndExpr = [
+        { $eq: ['$domain_id', userDomain.domainId] },
+        { $eq: ['$service_type', 'uptime'] },
+        { $eq: ['$child_service_type', logType] }
+    ];
+
+    if (filterExpr && ['ok', 'error'].includes(filterExpr)) {
+        queryAndExpr.push(
+            {
+                [filterExpr === 'ok' ? '$eq' : '$ne']: ['$status', 'ok']
+            }
+        )
+    }
+
     let domainUptimeLogs = await dbHelpers.get(
         ServiceLog.serviceLogAggregated,
         {
             bothStageQuery: {
                 0: {
                     $match: {
-                        domain_id: userDomain.domainId,
-                        service_type: 'uptime',
-                        child_service_type: logType
+                        $expr: { $and: queryAndExpr }
                     }
                 },
                 1: {
@@ -37,32 +50,23 @@ module.exports = async function (req, res) {
                                                 ]
                                             },
                                             {
-                                                $eq: [
-                                                    '$user_id',
-                                                    req.me.id
-                                                ]
+                                                $eq: ['$user_id', req.me.id]
                                             },
                                             {
                                                 $ne: [
-                                                    {
-                                                        $type: '$domain_use_for.domain_uptime_check_service'
-                                                    },
+                                                    { $type: '$domain_use_for.domain_uptime_check_service' },
                                                     'missing'
                                                 ]
                                             },
                                             {
                                                 $ne: [
-                                                    {
-                                                        $type: '$domain_use_for.domain_uptime_check_service.check_types'
-                                                    },
+                                                    { $type: '$domain_use_for.domain_uptime_check_service.check_types' },
                                                     'missing'
                                                 ]
                                             },
                                             {
                                                 $ne: [
-                                                    {
-                                                        $type: '$domain_use_for.domain_uptime_check_service.status'
-                                                    },
+                                                    { $type: '$domain_use_for.domain_uptime_check_service.status' },
                                                     'missing'
                                                 ]
                                             },
@@ -75,9 +79,7 @@ module.exports = async function (req, res) {
                         as: 'user_domain'
                     }
                 },
-                2: {
-                    $unwind: '$user_domain'
-                },
+                2: { $unwind: '$user_domain' },
                 3: {
                     $sort: { logged_at: -1 }
                 }
