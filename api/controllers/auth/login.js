@@ -27,11 +27,11 @@ module.exports = async function (req, res) {
     }
 
     //check user status
-    /*if (userRecord.verifyStatus !== 1){
+    if (userRecord.verifyStatus !== 1){
         return res.json({
             unverified : true
         }).status(200);
-    }*/
+    }
 
     delete userRecord.password;
 
