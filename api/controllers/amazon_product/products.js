@@ -24,7 +24,7 @@ module.exports = async function (req, res) {
     let productMetaUnwind = {
         path: '$meta',
         preserveNullAndEmptyArrays: true
-    }
+    };
 
     if (searchExpr) {
         metaPipelineAndExpr.push({
@@ -183,11 +183,7 @@ module.exports = async function (req, res) {
                         $lookup: {
                             from: 'amazon_products_meta',
                             let: { product_id: { $toString: '$_id' } },
-                            pipeline: [{
-                                $match: {
-                                    $expr: { $and: metaPipelineAndExpr }
-                                }
-                            }],
+                            pipeline: [{ $match: { $expr: { $and: metaPipelineAndExpr } } }],
                             as: 'meta'
                         },
                     },
@@ -205,7 +201,7 @@ module.exports = async function (req, res) {
                 'product.meta.compressed_content': 0
             }
         }
-    }
+    };
 
     let amazonProducts = await dbHelpers.get(
         AmazonProductInPage.amazonProductsInPagesAggregated,
