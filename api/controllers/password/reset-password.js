@@ -3,7 +3,7 @@ module.exports = async function (req, res) {
     if (!request.validate(req, res, {
         'email': 'required|email',
         'token': 'required',
-        'password' : 'required|confirmed'
+        'password' : 'required|confirmed|min:6'
     })) return;
 
     let email = req.param('email');

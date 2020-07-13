@@ -1,7 +1,7 @@
 module.exports = async function (req, res) {
 
     if (!request.validate(req, res, {
-        'password' : 'required|confirmed'
+        'password' : 'required|confirmed|min:6'
     })) return;
 
     let password = req.param('password');

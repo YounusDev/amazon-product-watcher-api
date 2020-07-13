@@ -7,7 +7,7 @@ module.exports = async function (req, res) {
         'email'     : 'required|email',
         'first_name': 'required',
         'last_name' : 'required',
-        'password'  : 'required|confirmed',
+        'password'  : 'required|confirmed|min:6',
         'verify_url' : 'required'
     })) return;
 
