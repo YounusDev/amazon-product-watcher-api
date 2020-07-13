@@ -15,7 +15,7 @@ module.exports = async function (req, res) {
         return res.status(404).json({message: 'email does not match'});
     }
 
-    if (checkUser.verifyStatus === 1) {
+    if (checkUser.verifyStatus) {
         return res.status(200).json({already_verify: true});
     }
 
@@ -24,7 +24,8 @@ module.exports = async function (req, res) {
     //set token for the user
     await User.updateOne({email: email})
         .set({
-            verifyToken: token
+            verifyToken: token,
+            verifyTokenExpired : Date.now()+sails.config.custom.verifyTokenLinkExpireTime
         });
 
     //send email

@@ -26,6 +26,10 @@ module.exports = {
                 type: 'string',
                 columnName: 'verify_token'
             },
+            verifyTokenExpired: {
+                type: 'string',
+                columnName: 'verify_token_expired'
+            },
             validated: {
                 type: 'string',
                 defaultsTo: 'active'

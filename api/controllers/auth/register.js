@@ -34,7 +34,8 @@ module.exports = async function (req, res) {
         password     : await sails.helpers.passwords.hashPassword(password),
         validated    : true,
         verifyStatus : 0,
-        verifyToken  : token
+        verifyToken  : token,
+        verifyTokenExpired : Date.now()+sails.config.custom.verifyTokenLinkExpireTime
     }).fetch();
 
     let userMeta = await UserMeta.create({
