@@ -19,12 +19,16 @@ module.exports = {
                 columnName: 'forgot_password_token_expired'
             },
             verifyStatus: {
-                type: 'string',
+                type: 'number',
                 columnName: 'verify_status'
             },
             verifyToken: {
                 type: 'string',
                 columnName: 'verify_token'
+            },
+            verifyTokenExpired: {
+                type: 'string',
+                columnName: 'verify_token_expired'
             },
             validated: {
                 type: 'string',

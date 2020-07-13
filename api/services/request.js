@@ -66,6 +66,14 @@ function checkValidation(req, fieldName, fieldInfo) {
                 if (req.param(fieldName) !== req.param('confirm_password')) {
                     error = _.lowerCase(fieldName) + ' and confirm password does not match';
                 }
+            } else if (rule.includes('min')) {
+
+                let ruleInfo = rule.split(':'),
+                    value = ruleInfo[1];
+
+                if (req.param(fieldName) < value) {
+                    error = _.lowerCase(fieldName) + ' must be at least '+value+' characters.';
+                }
             }
         }
     });

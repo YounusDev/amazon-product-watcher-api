@@ -14,14 +14,20 @@ module.exports = async function (req, res) {
         return res.status(404).json({message: 'token is invalid'});
     }
 
-    if (checkUser.verifyStatus === 1) {
+    //check token expire time
+    if (Date.now() > checkUser.verifyTokenExpired){
+        return res.status(200).json({token_expired: true});
+    }
+
+    if (checkUser.verifyStatus) {
         return res.status(200).json({already_verify: true});
     }
 
     await User.updateOne({verifyToken: token})
         .set({
             verifyStatus: 1,
-            verifyToken: ''
+            verifyToken: '',
+            verifyTokenExpired: ''
         });
 
     return res.status(200).json({

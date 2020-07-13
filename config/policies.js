@@ -24,4 +24,6 @@ module.exports.policies = {
     'auth/refresh': true,
     'password/forgot-password': true,
     'password/reset-password': true,
+    'auth/resend-verify-email': true,
+    'auth/account-verification': true,
 };

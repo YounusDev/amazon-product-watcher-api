@@ -7,7 +7,7 @@ module.exports = async function (req, res) {
         'email'     : 'required|email',
         'first_name': 'required',
         'last_name' : 'required',
-        'password'  : 'required|confirmed',
+        'password'  : 'required|confirmed|min:6',
         'verify_url' : 'required'
     })) return;
 
@@ -34,7 +34,8 @@ module.exports = async function (req, res) {
         password     : await sails.helpers.passwords.hashPassword(password),
         validated    : true,
         verifyStatus : 0,
-        verifyToken  : token
+        verifyToken  : token,
+        verifyTokenExpired : Date.now()+sails.config.custom.verifyTokenLinkExpireTime
     }).fetch();
 
     let userMeta = await UserMeta.create({
@@ -44,42 +45,11 @@ module.exports = async function (req, res) {
         address  : address
     }).fetch();
 
-    //delete createdUser.password;
-
-    /*let appSecret      = sails.config.custom.appSecret;
-    let jwtTime        = sails.config.custom.jwtTime;
-    let jwtRefreshTime = sails.config.custom.jwtRefreshTime;
-
-    let bearerToken = await sails.JWT.sign(
-        {
-            data: createdUser
-        },
-        appSecret,
-        {expiresIn: jwtTime}
-    );
-
-    let refreshToken = await sails.JWT.sign(
-        {
-            data: {
-                bearerToken: bearerToken,
-                user       : createdUser
-            }
-        },
-        appSecret,
-        {expiresIn: jwtRefreshTime / 1000}
-    );
-
-    res.cookie('refreshToken', refreshToken, {maxAge: jwtRefreshTime, httpOnly: true, signed: true});
-
-    createdUser.meta = userMeta;*/
-
     //send verification email
     let verifyUrl = req.param('verify_url')+'/'+token;
     await emails.accountVerification(createdUser.email, verifyUrl);
 
     return res.status(200).json({
-        //user       : commonHelpers.objectKeysToSnakeCase(createdUser),
-        //bearerToken: bearerToken,
         registration: true
     });
 };

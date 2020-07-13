@@ -24,6 +24,7 @@ module.exports.routes = {
     'PATCH /reset-password/:token': 'password/reset-password',
 
     'POST /resend-verify-email': 'auth/resend-verify-email',
+    'PATCH /email/verify/:token': 'auth/account-verification',
 
     'GET /projects': 'project/index',
     'GET /projects/:id': 'project/show',
