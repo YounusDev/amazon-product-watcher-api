@@ -2,12 +2,14 @@ let nodemailer = require('nodemailer');
 
 module.exports.sendEmail = async function (mailOptions) {
 
+    let emailCredential = sails.config.custom.emailCredential;
+
     let transport = nodemailer.createTransport({
-        host: "smtp.mailtrap.io",
+        host: emailCredential.host,
         port: 2525,
         auth: {
-            user: "bd94d899165ecf",
-            pass: "7452ea52f7de5d"
+            user: emailCredential.user,
+            pass: emailCredential.pass
         }
     });
 

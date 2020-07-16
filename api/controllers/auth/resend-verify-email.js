@@ -1,8 +1,7 @@
 module.exports = async function (req, res) {
 
     if (!request.validate(req, res, {
-        'email' : 'required|email',
-        'verify_url' : 'required'
+        'email' : 'required|email'
     })) return;
 
     let email = req.param('email');
@@ -29,7 +28,7 @@ module.exports = async function (req, res) {
         });
 
     //send email
-    let verifyUrl = req.param('verify_url')+'/'+token;
+    let verifyUrl = sails.config.custom.clientEndpoint+'/auth/account/verify/'+token;
     await emails.accountVerification(checkUser.email, verifyUrl);
 
     return res.status(200).json({

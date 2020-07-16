@@ -1,8 +1,7 @@
 module.exports = async function (req, res) {
 
     if (!request.validate(req, res, {
-        'email': 'required|email',
-        'reset_url': 'required'
+        'email': 'required|email'
     })) return;
 
     let email = req.param('email');
@@ -25,7 +24,7 @@ module.exports = async function (req, res) {
         });
 
     //send email
-    let resetUrl = req.param('reset_url')+'/'+token;
+    let resetUrl = sails.config.custom.clientEndpoint+'/auth/password/reset/'+token;
     await emails.passwordRecovery(userInfo.email, resetUrl);
 
     return res.status(200).json({

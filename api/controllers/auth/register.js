@@ -7,8 +7,7 @@ module.exports = async function (req, res) {
         'email'     : 'required|email',
         'first_name': 'required',
         'last_name' : 'required',
-        'password'  : 'required|confirmed|min:6',
-        'verify_url' : 'required'
+        'password'  : 'required|confirmed|min:6'
     })) return;
 
     let email     = req.param('email');
@@ -46,7 +45,7 @@ module.exports = async function (req, res) {
     }).fetch();
 
     //send verification email
-    let verifyUrl = req.param('verify_url')+'/'+token;
+    let verifyUrl = sails.config.custom.clientEndpoint+'/auth/account/verify/'+token;
     await emails.accountVerification(createdUser.email, verifyUrl);
 
     return res.status(200).json({
