@@ -71,7 +71,7 @@ function checkValidation(req, fieldName, fieldInfo) {
                 let ruleInfo = rule.split(':'),
                     value = ruleInfo[1];
 
-                if (req.param(fieldName) < value) {
+                if (req.param(fieldName).length < value) {
                     error = _.lowerCase(fieldName) + ' must be at least '+value+' characters.';
                 }
             }
