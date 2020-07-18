@@ -52,6 +52,7 @@ module.exports.routes = {
     'PATCH /projects/:id/domain-uptime': 'domain_uptime/update',
 
     'GET /notifications': 'notification/index',
+    'PATCH /notifications/update': 'notification/update',
 
     'GET /latest-issues': 'notification/latest-issues',
     'GET /latest-scraped-pages': 'notification/latest-scraped-pages',

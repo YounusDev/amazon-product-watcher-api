@@ -21,6 +21,11 @@ module.exports = {
         deactivatedAt: {
             type: 'string',
             columnName: 'deactivated_at'
+        },
+        createdAt: {
+            type: 'number',
+            autoCreatedAt: true,
+            columnName: 'created_at'
         }
     },
 
