@@ -3,7 +3,7 @@ module.exports = async function (req, res) {
 
     if (!refreshToken) {
         return res.status(422).json(
-            {errors: ['refresh token not found']}
+            { errors: [], message: 'Refresh token not found' }
         );
     }
 
@@ -12,8 +12,8 @@ module.exports = async function (req, res) {
 
         if (decodedRefreshToken.data.bearerToken === JWTHelpers.hasToken(req)) {
 
-            let appSecret      = sails.config.custom.appSecret;
-            let jwtTime        = sails.config.custom.jwtTime;
+            let appSecret = sails.config.custom.appSecret;
+            let jwtTime = sails.config.custom.jwtTime;
             let jwtRefreshTime = sails.config.custom.jwtRefreshTime;
 
             let bearerToken = await sails.JWT.sign(
@@ -21,7 +21,7 @@ module.exports = async function (req, res) {
                     data: decodedRefreshToken.data.user
                 },
                 appSecret,
-                {expiresIn: jwtTime}
+                { expiresIn: jwtTime }
             );
 
             // we r setting again cz 2nd time prev bearer token gone so set with new
@@ -31,20 +31,20 @@ module.exports = async function (req, res) {
                 {
                     data: {
                         bearerToken: bearerToken,
-                        user       : decodedRefreshToken.data.user
+                        user: decodedRefreshToken.data.user
                     }
                 },
                 appSecret,
-                {expiresIn: jwtRefreshTime / 1000}
+                { expiresIn: jwtRefreshTime / 1000 }
             );
 
             res.cookie(
                 'refreshToken',
                 refreshToken,
                 {
-                    maxAge  : jwtRefreshTime,
+                    maxAge: jwtRefreshTime,
                     httpOnly: true,
-                    signed  : true
+                    signed: true
                 }
             );
 
@@ -54,12 +54,12 @@ module.exports = async function (req, res) {
 
         } else {
             return res.status(422).json(
-                {errors: ['bearer token invalid']}
+                { errors: [], message: 'Bearer token invalid' }
             );
         }
     } catch (e) {
         return res.json(
-            {errors: ['bearer token invalid']}
+            { errors: [], message: 'Bearer token invalid' }
         ).status(422);
     }
 };
