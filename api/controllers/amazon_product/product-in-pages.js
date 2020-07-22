@@ -1,5 +1,5 @@
 module.exports = async function (req, res) {
-    let ownerInfo = checkOwner(req, res);
+    let ownerInfo = await checkOwner(req, res);
 
     if (!(!!ownerInfo)) return res.status(404).json({ message: 'invalid project id' });
 
@@ -12,7 +12,7 @@ module.exports = async function (req, res) {
                 0: {
                     $match: {
                         product_id: productId,
-                        user_domain_id: ownerInfo.user_id
+                        user_domain_id: ownerInfo.id
                     }
                 },
                 3: {
