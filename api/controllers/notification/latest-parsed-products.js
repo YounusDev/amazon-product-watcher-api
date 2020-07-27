@@ -46,9 +46,16 @@ module.exports = async function (req, res) {
                             {
                                 $match: {
                                     $expr: {
-                                        $eq: [
-                                            '$$product_id',
-                                            { $toString: '$_id' }
+                                        $and: [
+                                            {
+                                                $eq: ['$$product_id',{ $toString: '$_id' }]
+                                            },
+                                            {
+                                                $ne: [{$type: '$updated_at'}, 'missing']
+                                            },
+                                            {
+                                                $ne: [{$type: '$updated_at.last_parsed_at'}, 'missing']
+                                            }
                                         ]
                                     }
                                 },
@@ -66,7 +73,7 @@ module.exports = async function (req, res) {
                     }
                 },
                 7: {
-                    $sort: { 'product.updated_at.last_scraped_at': -1 }
+                    $sort: { 'product.updated_at.last_parsed_at': -1 }
                 },
                 8: {
                     $limit: 5

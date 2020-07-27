@@ -6,7 +6,14 @@ module.exports = async function (req, res) {
                 0: {
                     $match: {
                         $expr: {
-
+                            $and: [
+                                {
+                                    $ne: [{$type: '$updated_at'}, 'missing']
+                                },
+                                {
+                                    $ne: [{$type: '$updated_at.last_scraped_at'}, 'missing']
+                                }
+                            ]
                         }
                     }
                 },
