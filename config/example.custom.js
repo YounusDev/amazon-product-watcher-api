@@ -21,7 +21,14 @@ module.exports.example_custom = {
     // …
 
     appSecret: '5a632519-4d50-496f-9e7d-cef656716099',
-    //jwtTime: 2*60, // 5 min
-    jwtTime: 30*60*60, // 5 min
-    jwtRefreshTime: 72*60*60*1000 // 3 day
+    jwtTime: 5*60, // 5 min
+    jwtRefreshTime: 72*60*60*1000, // 3 day
+    resetPasswordLinkExpireTime: 60*60*1000, // 60 min
+    verifyTokenLinkExpireTime: 60*60*1000, // 60 min
+    clientEndpoint: "http://localhost:8080",
+    emailCredential: {
+        host: 'smtp.mailtrap.io',
+        user: 'bd94d899165ecf',
+        pass: '7452ea52f7de5d'
+    }
 };
