@@ -8,7 +8,7 @@
  * https://sailsjs.com/config/custom
  */
 
-module.exports.custom = {
+module.exports.example_custom = {
 
     /***************************************************************************
      *                                                                          *
