@@ -1,7 +1,8 @@
+const { domain } = require("process");
+
 module.exports = async function (req, res) {
     let userProjectId = req.param('id');
     let status        = req.param('status');
-    let guestDomain   = req.param('guest_domain');
     let urls          = req.param('urls');
 
     let userProject = await UserDomain.findOne({
@@ -12,6 +13,69 @@ module.exports = async function (req, res) {
     if (!userProject) {
         return res.status(404).json({message: 'invalid project id'});
     }
+
+    let urlsHasError = false;
+
+    let domains = []
+
+    urls.map(obj => {
+        if (obj.guest_post_url) {
+            try {
+                let parsedGuestdUrl = new URL(obj.guest_post_url);
+
+                if(!parsedGuestdUrl.origin) {
+                    urlsHasError = true;
+                } else if(!domains.includes(parsedGuestdUrl.origin)) {
+                    domains.push(parsedGuestdUrl.origin)
+                }
+            } catch {
+                urlsHasError = true;
+            }
+            
+        } else {
+            urlsHasError = true;
+        }
+
+        if (obj.holding_url) {
+            try {
+                let parsedHoldingUrl = new URL(obj.holding_url);
+
+                if(!parsedHoldingUrl.origin) {
+                    urlsHasError = true;
+                } else if(!domains.includes(parsedHoldingUrl.origin)) {
+                    domains.push(parsedHoldingUrl.origin)
+                }
+            } catch {
+                urlsHasError = true;
+            }
+            
+        } else {
+            urlsHasError = true;
+        }
+    });
+    
+
+    console.log(domains);
+
+    if(urlsHasError) {
+        return res.status(404).json({message: 'invalid urls given'});
+    }
+    
+    await Promise.all(
+        domains.map(async (domainName) => {
+            await Domain.domainCollection().updateOne(
+                {
+                    url: domainName
+                },
+                {
+                    $setOnInsert: {
+                        url: domainName
+                    }
+                },
+                {upsert: true}
+            );
+        })
+    )
 
     let prevLinksInGuestPosts = commonHelpers.objectKeysToSnakeCase(await LinkInGuestPost.find({
         userDomainId: userProjectId
@@ -34,51 +98,35 @@ module.exports = async function (req, res) {
         if (!foundPrevObj) forDelete.push(prevObj.id);
     });
 
-    urls.map(async obj => {
-        await LinkInGuestPost.linksInGuestPostCollection().updateOne(
-            {
-                user_domain_id: userProjectId,
-                holding_url   : obj.holding_url,
-                guest_post_url: obj.guest_post_url
-            },
-            {
-                $setOnInsert: {
+    await Promise.all(
+        urls.map(async obj => {
+            await LinkInGuestPost.linksInGuestPostCollection().updateOne(
+                {
                     user_domain_id: userProjectId,
                     holding_url   : obj.holding_url,
                     guest_post_url: obj.guest_post_url
-                }
-            },
-            {upsert: true}
-        );
-    });
-
-    forDelete.map(async item => {
-        await LinkInGuestPost.linksInGuestPostCollection().deleteOne({_id: sails.ObjectId(item)});
-    });
-
-    let guestDomainId = '';
-
-    let upsertedGuestDomain = await Domain.domainCollection().updateOne(
-        {
-            url: guestDomain
-        },
-        {
-            $setOnInsert: {
-                url: guestDomain
-            }
-        },
-        {upsert: true}
+                },
+                {
+                    $setOnInsert: {
+                        user_domain_id: userProjectId,
+                        holding_url   : obj.holding_url,
+                        guest_post_url: obj.guest_post_url
+                    }
+                },
+                {upsert: true}
+            );
+        })
     );
 
-    if (upsertedGuestDomain.upsertedId) {
-        guestDomainId = upsertedGuestDomain.upsertedId._id.toString();
-    } else {
-        let domain    = await Domain.findOne({url: guestDomain});
-        guestDomainId = domain.id;
-    }
+    await Promise.all(
+        forDelete.map(async item => {
+            await LinkInGuestPost.linksInGuestPostCollection().deleteOne({_id: sails.ObjectId(item)});
+        })
+    )
+    
 
-    // it will try to preserve domain use for nested objects
-    // cz updated one cant update only a single key of a nested object
+    // // it will try to preserve domain use for nested objects
+    // // cz updated one cant update only a single key of a nested object
     let prevDomainUseFor = _.cloneDeep(userProject.domainUseFor);
     if (!prevDomainUseFor.hasOwnProperty('guestPostsCheckService')) {
         prevDomainUseFor['guest_posts_check_service'] = {};
@@ -86,7 +134,6 @@ module.exports = async function (req, res) {
 
     let modifiedDomainUseFor                                          = prevDomainUseFor;
     modifiedDomainUseFor.guest_posts_check_service['status']          = status;
-    modifiedDomainUseFor.guest_posts_check_service['guest_domain_id'] = guestDomainId;
 
     let updatedProjectService = await UserDomain.updateOne({
         userId: req.me.id,
