@@ -5,6 +5,8 @@ module.exports.checkToken = async function (req) {
         try {
             let JWTStatus = await sails.JWT.verify(token, sails.config.custom.appSecret);
 
+            console.log(JWTStatus);
+
             req.me = JWTStatus.data;
 
             return true;
