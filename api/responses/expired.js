@@ -21,5 +21,5 @@
  * ```
  */
 module.exports = function expired() {
-    return this.res.status(498).json({message: 'Token Expired/Invalid'});
+    return this.res.status(498).json({ message: "Token Expired/Invalid" });
 };

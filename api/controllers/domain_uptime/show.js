@@ -1,13 +1,13 @@
 module.exports = async function (req, res) {
-    let usersDomainId = req.param('id');
+    let usersDomainId = req.param("id");
 
     let userDomain = await UserDomain.findOne({
-        id    : usersDomainId,
-        userId: req.me.id
+        id: usersDomainId,
+        userId: req.me.id,
     });
 
     if (!userDomain) {
-        return res.status(404).json({message: 'invalid project id'});
+        return res.status(404).json({ message: "invalid project id" });
     }
 
     let domainUptimeDetails = await dbHelpers.getSingle(
@@ -15,7 +15,7 @@ module.exports = async function (req, res) {
         [
             {
                 $lookup: {
-                    from    : 'users_domains',
+                    from: "users_domains",
                     pipeline: [
                         {
                             $match: {
@@ -23,86 +23,85 @@ module.exports = async function (req, res) {
                                     $and: [
                                         {
                                             $eq: [
-                                                {$toString: '$_id'},
-                                                usersDomainId
-                                            ]
+                                                { $toString: "$_id" },
+                                                usersDomainId,
+                                            ],
                                         },
+                                        // {
+                                        //     $eq: [
+                                        //         '$user_id',
+                                        //         req.me.id
+                                        //     ]
+                                        // },
                                         {
-                                            $eq: [
-                                                '$user_id',
-                                                req.me.id
-                                            ]
+                                            $ne: [
+                                                {
+                                                    $type:
+                                                        "$domain_use_for.domain_uptime_check_service",
+                                                },
+                                                "missing",
+                                            ],
                                         },
                                         {
                                             $ne: [
                                                 {
-                                                    $type: '$domain_use_for.domain_uptime_check_service'
+                                                    $type:
+                                                        "$domain_use_for.domain_uptime_check_service.check_types",
                                                 },
-                                                'missing'
-                                            ]
+                                                "missing",
+                                            ],
                                         },
                                         {
                                             $ne: [
                                                 {
-                                                    $type: '$domain_use_for.domain_uptime_check_service.check_types'
+                                                    $type:
+                                                        "$domain_use_for.domain_uptime_check_service.status",
                                                 },
-                                                'missing'
-                                            ]
-                                        },
-                                        {
-                                            $ne: [
-                                                {
-                                                    $type: '$domain_use_for.domain_uptime_check_service.status'
-                                                },
-                                                'missing'
-                                            ]
+                                                "missing",
+                                            ],
                                         },
                                         // currently if service inactive or not started from start we are showing result
-                                    ]
-                                }
-                            }
-                        }
+                                    ],
+                                },
+                            },
+                        },
                     ],
-                    as      : 'user_domain'
-                }
+                    as: "user_domain",
+                },
             },
 
-            {$unwind: '$user_domain'},
+            { $unwind: "$user_domain" },
 
             {
                 $lookup: {
-                    from    : 'domains_meta',
-                    let     : {domain_id: {$toString: '$_id'}},
+                    from: "domains_meta",
+                    let: { domain_id: { $toString: "$_id" } },
                     pipeline: [
                         {
                             $match: {
                                 $expr: {
                                     $and: [
                                         {
-                                            $eq: [
-                                                '$$domain_id',
-                                                '$domain_id'
-                                            ]
-                                        }
-                                    ]
-                                }
-                            }
-                        }
+                                            $eq: ["$$domain_id", "$domain_id"],
+                                        },
+                                    ],
+                                },
+                            },
+                        },
                     ],
-                    as      : 'meta'
-                }
+                    as: "meta",
+                },
             },
 
             {
                 $unwind: {
-                    path                      : '$meta',
-                    preserveNullAndEmptyArrays: true
-                }
-            }
+                    path: "$meta",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
         ],
         req
     );
 
-    return res.status(200).json({domainUptimeDetails: domainUptimeDetails});
+    return res.status(200).json({ domainUptimeDetails: domainUptimeDetails });
 };
-

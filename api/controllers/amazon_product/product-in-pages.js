@@ -1,9 +1,10 @@
 module.exports = async function (req, res) {
     let ownerInfo = await checkOwner(req, res);
 
-    if (!(!!ownerInfo)) return res.status(404).json({ message: 'invalid project id' });
+    if (!!!ownerInfo)
+        return res.status(404).json({ message: "invalid project id" });
 
-    let productId = req.param('id');
+    let productId = req.param("id");
 
     let productsInPages = await dbHelpers.get(
         AmazonProductInPage.amazonProductsInPagesAggregated,
@@ -12,39 +13,38 @@ module.exports = async function (req, res) {
                 0: {
                     $match: {
                         product_id: productId,
-                        user_domain_id: ownerInfo.id
-                    }
+                        user_domain_id: ownerInfo.id,
+                    },
                 },
                 3: {
                     $lookup: {
-                        from: 'pages',
-                        let: { page_id: '$page_id' },
+                        from: "pages",
+                        let: { page_id: "$page_id" },
                         pipeline: [
                             {
                                 $match: {
                                     $expr: {
                                         $eq: [
-                                            '$$page_id',
-                                            { $toString: '$_id' }
-                                        ]
-                                    }
+                                            "$$page_id",
+                                            { $toString: "$_id" },
+                                        ],
+                                    },
                                 },
-                            }
+                            },
                         ],
-                        as: 'page',
-                    }
+                        as: "page",
+                    },
                 },
                 4: {
-                    $unwind: '$page'
-                }
-            }
+                    $unwind: "$page",
+                },
+            },
         },
         req
     );
 
     return res.status(200).json({ productsInPages: productsInPages });
 };
-
 
 //check owner of product
 async function checkOwner(req, res) {
@@ -58,29 +58,24 @@ async function checkOwner(req, res) {
                     $expr: {
                         $and: [
                             {
-                                $eq: [
-                                    { $toString: '$_id' },
-                                    projectId
-                                ]
+                                $eq: [{ $toString: "$_id" }, projectId],
                             },
                             {
-                                $eq: [
-                                    '$user_id',
-                                    req.me.id
-                                ]
+                                $eq: ["$user_id", req.me.id],
                             },
                             {
                                 $ne: [
                                     {
-                                        $type: '$domain_use_for.amazon_products_check_service'
+                                        $type:
+                                            "$domain_use_for.amazon_products_check_service",
                                     },
-                                    'missing'
-                                ]
-                            }
-                        ]
-                    }
-                }
-            }
+                                    "missing",
+                                ],
+                            },
+                        ],
+                    },
+                },
+            },
         ]
     );
 

@@ -21,5 +21,5 @@
  * ```
  */
 module.exports = function unauthorized() {
-    return this.res.status(401).json({message: 'Unauthorized'});
+    return this.res.status(401).json({ message: "Unauthorized" });
 };

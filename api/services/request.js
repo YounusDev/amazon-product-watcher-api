@@ -2,12 +2,14 @@ module.exports.validate = function (req, res, fields) {
     let errors = {};
 
     Object.keys(fields).forEach((fieldName) => {
-        let response = '';
+        let response = "";
 
         response = checkValidation(
             req,
             fieldName,
-            _.isPlainObject(fields[fieldName]) ? fields[fieldName].rule : fields[fieldName]
+            _.isPlainObject(fields[fieldName])
+                ? fields[fieldName].rule
+                : fields[fieldName]
         );
 
         // if (_.isPlainObject(fields[fieldName])) {
@@ -16,10 +18,14 @@ module.exports.validate = function (req, res, fields) {
         // errors[fieldName] = checkValidation(req, fieldName, fields[fieldName]);
         // }
 
-        if (response) {errors[fieldName] = response;}
+        if (response) {
+            errors[fieldName] = response;
+        }
     });
 
-    if (Object.keys(errors).length) {return res.status(422).json({errors: errors}) && false;}
+    if (Object.keys(errors).length) {
+        return res.status(422).json({ errors: errors }) && false;
+    }
 
     return true;
 
@@ -34,45 +40,44 @@ module.exports.validate = function (req, res, fields) {
 };
 
 function checkValidation(req, fieldName, fieldInfo) {
-    let error = '';
-    let rules = fieldInfo.split('|');
+    let error = "";
+    let rules = fieldInfo.split("|");
 
     rules.forEach((rule) => {
         if (!error) {
-
-            if (rule === 'required') {
-
+            if (rule === "required") {
                 if (!req.param(fieldName)) {
-                    error = _.lowerCase(fieldName) + ' field is required';
+                    error = _.lowerCase(fieldName) + " field is required";
                 }
-
-            } else if (rule === 'string') {
-
+            } else if (rule === "string") {
                 if (!_.isString(req.param(fieldName))) {
-                    error = _.lowerCase(fieldName) + ' field must be string';
+                    error = _.lowerCase(fieldName) + " field must be string";
                 }
-
-            } else if (rule === 'email') {
-
+            } else if (rule === "email") {
                 let re = /\S+@\S+\.\S+/;
-                let isMail = re.test(String(req.param(fieldName)).toLowerCase());
+                let isMail = re.test(
+                    String(req.param(fieldName)).toLowerCase()
+                );
 
                 if (!isMail) {
-                    error = _.lowerCase(fieldName) + ' field must be email';
+                    error = _.lowerCase(fieldName) + " field must be email";
                 }
-
-            } else if (rule === 'confirmed') {
-
-                if (req.param(fieldName) !== req.param('confirm_password')) {
-                    error = _.lowerCase(fieldName) + ' and confirm password does not match';
+            } else if (rule === "confirmed") {
+                if (req.param(fieldName) !== req.param("confirm_password")) {
+                    error =
+                        _.lowerCase(fieldName) +
+                        " and confirm password does not match";
                 }
-            } else if (rule.includes('min')) {
-
-                let ruleInfo = rule.split(':'),
+            } else if (rule.includes("min")) {
+                let ruleInfo = rule.split(":"),
                     value = ruleInfo[1];
 
                 if (req.param(fieldName).length < value) {
-                    error = _.lowerCase(fieldName) + ' must be at least '+value+' characters.';
+                    error =
+                        _.lowerCase(fieldName) +
+                        " must be at least " +
+                        value +
+                        " characters.";
                 }
             }
         }

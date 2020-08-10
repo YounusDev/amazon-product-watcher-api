@@ -1,21 +1,21 @@
 module.exports = async function (req, res) {
-    let usersDomainId = req.param('id');
-    let searchExpr = req.param('s');
+    let usersDomainId = req.param("id");
+    let searchExpr = req.param("s");
 
     let userDomain = await UserDomain.findOne({
         id: usersDomainId,
-        userId: req.me.id
+        userId: req.me.id,
     });
 
     if (!userDomain) {
-        return res.status(404).json({ message: 'invalid project id' });
+        return res.status(404).json({ message: "invalid project id" });
     }
 
     let queryAndExpr = [];
 
     if (searchExpr) {
         queryAndExpr.push({
-            $regexFind: { input: '$url', regex: searchExpr, options: 'i' }
+            $regexFind: { input: "$url", regex: searchExpr, options: "i" },
         });
     }
 
@@ -25,83 +25,91 @@ module.exports = async function (req, res) {
             bothStageQuery: {
                 0: {
                     $match: {
-                        $expr: { $and: queryAndExpr }
-                    }
+                        $expr: { $and: queryAndExpr },
+                    },
                 },
                 1: {
                     $lookup: {
-                        from: 'users_domains',
-                        let: { domain_id: '$domain_id' },
+                        from: "users_domains",
+                        let: { domain_id: "$domain_id" },
                         pipeline: [
                             {
                                 $match: {
                                     $expr: {
                                         $and: [
                                             {
-                                                $eq: ['$user_id', req.me.id],
-                                            },
-                                            {
-                                                $eq: ['$domain_id', '$$domain_id'],
-                                            },
-                                            {
-                                                $ne: [
-                                                    { $type: '$domain_use_for.pages_speed_check_service' },
-                                                    'missing'
-                                                ]
-                                            },
-                                            {
-                                                $ne: [
-                                                    { $type: '$domain_use_for.pages_speed_check_service.status' },
-                                                    'missing'
-                                                ]
+                                                $eq: ["$user_id", req.me.id],
                                             },
                                             {
                                                 $eq: [
-                                                    '$domain_use_for.pages_speed_check_service.status',
-                                                    'active'
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
+                                                    "$domain_id",
+                                                    "$$domain_id",
+                                                ],
+                                            },
+                                            {
+                                                $ne: [
+                                                    {
+                                                        $type:
+                                                            "$domain_use_for.pages_speed_check_service",
+                                                    },
+                                                    "missing",
+                                                ],
+                                            },
+                                            {
+                                                $ne: [
+                                                    {
+                                                        $type:
+                                                            "$domain_use_for.pages_speed_check_service.status",
+                                                    },
+                                                    "missing",
+                                                ],
+                                            },
+                                            {
+                                                $eq: [
+                                                    "$domain_use_for.pages_speed_check_service.status",
+                                                    "active",
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
                         ],
-                        as: 'user_domain'
-                    }
+                        as: "user_domain",
+                    },
                 },
-                2: { $unwind: '$user_domain' },
+                2: { $unwind: "$user_domain" },
                 3: {
                     $lookup: {
-                        from: 'pages_meta',
-                        let: { id: '$_id' },
+                        from: "pages_meta",
+                        let: { id: "$_id" },
                         pipeline: [
                             {
                                 $match: {
                                     $expr: {
                                         $eq: [
-                                            { $toString: '$$id' },
-                                            '$page_id'
-                                        ]
-                                    }
-                                }
-                            }
+                                            { $toString: "$$id" },
+                                            "$page_id",
+                                        ],
+                                    },
+                                },
+                            },
                         ],
-                        as: 'meta'
-                    }
+                        as: "meta",
+                    },
                 },
                 4: {
                     // cant use this cz page_meta can be empty
                     // unwind: '$meta'
                     $unwind: {
-                        path: '$meta',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }
-            }
+                        path: "$meta",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+            },
         },
         req
     );
 
     return res.status(200).json({ pageSpeedResults: pageSpeedResults });
 };
-
